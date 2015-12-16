@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p>
+    Observers can subscribe to the subject to receive the last (or initial) value
+    and all subsequent notifications. If you are looking for BehaviorSubject without
+    initial value see Rx.ReplaySubject. <br>
+
+    ReplaySubject is a hot observable
+</p>
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    // interval() emits an integer every 500ms
+    var source = Rx.Observable.interval(500);
+
+    // the initial value will be cat
+    var subject = new Rx.BehaviorSubject('cat');
+
+    var subSource = source.subscribe(subject);
+
+    subject.subscribe(function(x){
+        console.log('a '+x);
+    });
+
+
+    setTimeout(function(){
+        subject.subscribe(function(x){
+            console.log('\tb '+x);
+        });
+    },3000);
+
+
+    setTimeout(function () {
+        subject.onCompleted();
+        subSource.dispose();
+    }, 6000);
+
+</script>
+
+</body>
+</html>

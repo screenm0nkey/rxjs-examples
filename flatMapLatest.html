@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    /*
+     Transform the items emitted by an Observable into Observables,
+     and mirror those items emitted by the most-recently transformed Observable.
+
+     See mergeAll example. The code is the same as below but the output is different.
+     flatmap same as mergeAll
+     */
+    
+    var source = Rx.Observable
+            .range(3, 4)
+            .flatMapLatest(function (x) { return Rx.Observable.from([x + 'a', x + 'b', x + 'c']); });
+
+
+    source.subscribe(
+            function (x) {
+                console.log('Next: %s', x);
+            },
+            function (err) {
+                console.log('Error: %s', err);
+            },
+            function () {
+                console.log('Completed');
+            });
+
+    /*
+     Next: 3a
+     Next: 3b
+     Next: 4a
+     Next: 3c
+     Next: 4b
+     Next: 5a
+     Next: 4c
+     Next: 5b
+     Next: 6a
+     Next: 5c
+     Next: 6b
+     Next: 6c
+     Completed
+    * */
+
+
+
+
+</script>
+
+</body>
+</html>

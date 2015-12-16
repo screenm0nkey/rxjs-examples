@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+    var interval = Rx.Observable.interval(1000);
+
+    var source = interval
+            .take(4)
+            .doAction(function (x) {
+                console.log('do() ' + x);
+            });
+
+    var published = source
+            .shareReplay(3);
+
+    published.subscribe(createObserver('SourceA '));
+    published.subscribe(createObserver('SourceB '));
+
+    // Creating a third subscription after the previous two subscriptions have
+    // completed. Notice that no side effects result from this subscription,
+    // because the notifications are cached and replayed.
+    Rx.Observable
+            .return(true)
+            .delay(3000)
+            .flatMap(published)
+            .subscribe(createObserver('\t\tC '));
+
+    function createObserver(tag) {
+        return Rx.Observer.create(
+                function (x) {
+                    console.log('Next: ' + tag + x);
+                },
+                function (err) {
+                    console.log('Error: ' + err);
+                },
+                function (x) {
+                    console.log('Completed ' + tag);
+                });
+    }
+
+
+</script>
+
+</body>
+</html>
