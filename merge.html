@@ -10,19 +10,18 @@
 
 
 
-    var sourceA = Rx.Observable.interval(100).take(8).map(function(x) {
-        return 'a '+ x;
+    var sourceA = Rx.Observable.interval(300).take(4).map(function(x) {
+        return {type : 'a', val : x}
     });
 
     var sourceB = Rx.Observable.interval(100).take(3).map(function(x) {
-        return 'b ' + x;
+        return {type : 'b', val : x}
     });
 
 
-    sourceA.combineLatest(sourceB)
+    sourceA.merge(sourceB)
             .subscribe(function (x) {
-                console.log(x[0]);
-                console.log('\t'+x[1]);
+                console.log(x);
             });
 
 
