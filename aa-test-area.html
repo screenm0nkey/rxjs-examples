@@ -4,35 +4,11 @@
 <body>
 
 
-<button id="btn">Clickme</button>
-
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
-    var btn = document.getElementById('btn');
 
-    var clickStream = Rx.Observable.fromEvent(btn, 'click');
-
-    var initialState = '';
-
-
-    clickStream
-            .scan(function (accumulator, e) {
-                return e.x;
-            },initialState)
-            .subscribe(function (x) {
-                console.log(x);
-            })
-
-
-    clickStream
-            .map(function (e) {
-                return {x: e.x, y: e.y};
-            })
-            .subscribe(function (x) {
-                console.log(x);
-            })
 
 
 </script>

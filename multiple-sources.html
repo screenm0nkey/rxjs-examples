@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    var sourceA = Rx.Observable.interval(300).map(function(x) {
+       return {type : 'a', val : x}
+    });
+
+    var sourceB = Rx.Observable.interval(100).map(function(x) {
+        return {type : 'b', val : x}
+    });
+
+    var sourceC = Rx.Observable.interval(700).map(function(x) {
+        return {type : 'c', val : x}
+    });
+
+    var subject = new Rx.Subject();
+    sourceA.subscribe(subject);
+    sourceB.subscribe(subject);
+    sourceC.subscribe(subject);
+
+
+    subject.scan(function(accumulator, value) {
+        accumulator.val = accumulator.val + value.val;
+        return accumulator
+    }, {val:0}).subscribe(function(result) {
+        console.log(result);
+    });
+
+    
+    
+    subject.subscribe(function (val) {
+        console.log(val);
+    })
+
+
+</script>
+
+</body>
+</html>
+
+
