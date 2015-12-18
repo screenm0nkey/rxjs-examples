@@ -3,13 +3,21 @@
 <head></head>
 <body>
 
-<p>
-    Observers can subscribe to the subject to receive the last (or initial) value
-    and all subsequent notifications. If you are looking for BehaviorSubject without
-    initial value see Rx.ReplaySubject. <br>
+<h3>BehaviorSubject (hot observable)</h3>
 
-    ReplaySubject is a hot observable
-</p>
+    <p>Observers can subscribe to the subject to receive the last (or initial) value
+    and all subsequent notifications.</p>
+
+    <p>
+        If you are looking for BehaviorSubject without
+        initial value see <strong>Rx.ReplaySubject</strong>.
+    </p>
+
+    
+
+    <p>This also seems to be the same as <strong>Rx.Subject</strong>
+        but without the initial value. Have a look at the RX.Subject example</p>
+
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
@@ -17,7 +25,7 @@
     var source = Rx.Observable.interval(500);
 
     // the initial value will be cat
-    var subject = new Rx.BehaviorSubject('cat');
+    var subject = new Rx.BehaviorSubject('CATTTT');
 
     var subSource = source.subscribe(subject);
 

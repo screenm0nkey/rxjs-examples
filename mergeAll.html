@@ -6,8 +6,9 @@
 <h3>mergeAll</h3>
 
 <p>Does the same thing as <strong>flatMap()</strong>. </p>
-Merges an observable sequence of observable sequences into a single observable sequence.
-but the output is not in order as you can see below.
+Merges an observable sequence of observable sequences into a single observable sequence
+where the values are converted from observeables to actual values.
+(the output is not in order as you can see below)
 
 
 
@@ -20,7 +21,9 @@ See <strong>flatMapLatest()</strong> example. The code is the same as below but 
     var source = Rx.Observable
             .range(3, 4)
             .map(function (x) { return Rx.Observable.from([x + 'a', x + 'b', x + 'c']); })
-            .mergeAll();
+            .do(function(x){console.log(1, x)})
+            .mergeAll()
+            .do(function(x){console.log(2, x)});
 
     source.subscribe(
             function (x) {

@@ -60,12 +60,11 @@
 </div>
 
 <script>
-
     console.clear();
 
     angular.module('APP', [])
 
-            .service('dataService', function ($q, $timeout, $rootScope) {
+            .service('dataService', function ($q, $timeout) {
                 var colors = [
                     {name: 'red'},
                     {name: 'blue'},
@@ -90,7 +89,7 @@
                 }
 
                 function getPets() {
-                    return fakeAjax(pets, 3000);
+                    return fakeAjax(pets, 2000);
                 }
 
                 function nullResponse() {
@@ -126,9 +125,11 @@
                     return Rx.Observable.fromPromise(dataService.getEntities(type));
                 });
 
-                var listener = source.subscribe(function (entities) {
-                    controller.entities = entities;
-                });
+                var listener = source.subscribe(
+                        function (entities) { controller.entities = entities; },
+                        function () {},
+                        function () { console.log() }
+                );
 
                 $scope.$on('$destroy', function () {
                     listener.dispose();

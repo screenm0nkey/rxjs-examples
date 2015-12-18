@@ -2,16 +2,20 @@
 <html lang="en">
 <head></head>
 <body>
+<h3>flatMapLatest</h3>
+<p>
+    Transform the items emitted by an Observable into Observables,
+and mirror those items emitted by the most-recently transformed Observable.</p>
+
+<p>
+    <strong>flatMap and mergeAll</strong> does a similar thing in that they will merge all the observables
+    but displays all the values of the merged observables.
+
+</p>
+
+
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
-
-    /*
-     Transform the items emitted by an Observable into Observables,
-     and mirror those items emitted by the most-recently transformed Observable.
-
-     See mergeAll example. The code is the same as below but the output is different.
-     flatmap same as mergeAll
-     */
     
     var source = Rx.Observable
             .range(3, 4)
@@ -31,15 +35,9 @@
 
     /*
      Next: 3a
-     Next: 3b
      Next: 4a
-     Next: 3c
-     Next: 4b
      Next: 5a
-     Next: 4c
-     Next: 5b
      Next: 6a
-     Next: 5c
      Next: 6b
      Next: 6c
      Completed

@@ -4,23 +4,28 @@
 <body>
 See here <a href="https://egghead.io/lessons/rxjs-aggregating-streams-with-reduce-and-scan-using-rxjs">Video</a>
 
+<h3>Scan and reduce</h3>
+
+<p>scan and reduce do the same thing except reduce will only emit the final value when the observable completes.</p>
+<p>Do not reduce if your observable never completes</p>
+<p><strong>scan</strong> is the same as reduce but it emits the reduced value every time it recieves a value</p>
+
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
     var source = Rx.Observable.interval(1000).take(5);
 
-    // reduce will only emit the final value when the observable completes. so do not use if
-    // your observable never completes
-    source.reduce(function(r, x) {
-        return r + x;
-    }, 0).subscribe(function(result) {
-        console.log('reduce',result);
+
+    source.reduce(function(accumulator, value) {
+        return accumulator + value;
+    }, 'REDUCE ').subscribe(function(result) {
+        console.log(result);
     });
 
-    // scan is the same as reduce but it emits the reduced value every time it recieves a value
-    source.scan(function(r, x) {
-        return r + x;
-    }, 0).subscribe(function(result) {
-        console.log('scan',result);
+    
+    source.scan(function(accumulator, value) {
+        return accumulator + value;
+    }, 'SCAN ').subscribe(function(result) {
+        console.log(result);
     });
 
 

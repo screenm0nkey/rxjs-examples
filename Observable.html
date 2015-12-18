@@ -5,19 +5,33 @@
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
-    var aObs = Rx.Observable.interval(500).take(10).map(x=>x+1);
+    var aObs = Rx.Observable
+        .interval(500)
+        .take(10)
+        .map(function (x) { return x+1; });
 
-    var filterObs = aObs.filter(x=> x%2===0);
 
-    var mapObs = filterObs.map(x=> '\tb'+x);
+    var filterObs = aObs.filter(function (x) {
+        return x%2===0;
+    });
+
+    var mapObs = filterObs.map(function (x) {
+        return '\tb'+x;
+    });
 
 
-    aObs.subscribe(i => console.log('a'+i));
+    aObs.subscribe(function (x) {
+        console.log('a'+x);
+    });
 
-    mapObs.subscribe(i=> console.log(i));
+    mapObs.subscribe(function (x) {
+        console.log(x);
+    });
 
-    setTimeout(()=>{
-        filterObs.subscribe(i=> console.log('\t\tc'+i));
+    setTimeout(function () {
+        filterObs.subscribe(function (x) {
+            console.log('\t\tc'+x);
+        });
     },1000)
 
 </script>
