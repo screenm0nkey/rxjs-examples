@@ -7,8 +7,10 @@
 <h3>flatMap</h3>
 <p>See <strong>mergeAll()</strong> as it does the same thing.</p>
 
-<p>Merges an observable sequence of observable sequences into a single observable sequence
-and outputs all the values but the output is not in order i.e. it doesn't just output
+<p>Merges an observable sequence of observable sequences into a observable sequence of data from the observables.
+    what is does is subscribe the the observables in the obsersable stream and returns their values.
+
+    and outputs all the values but the output is not in order i.e. it doesn't just output
 everything from the first colelction, then the next.
 </p>
 

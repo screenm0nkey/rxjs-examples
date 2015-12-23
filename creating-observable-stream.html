@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+    var source = Rx.Observable.create(function (observer) {
+        var count = 0;
+        setInterval(function () {
+            observer.onNext(++count);
+        },1000);
+
+        //observer.onCompleted();
+
+        // Any cleanup logic might go here
+        return function () {
+            console.log('disposed');
+        }
+    });
+
+    var subscription = source
+            .map(function (x) {
+                return x + 'a';
+            })
+            .subscribe(
+                function (x) { console.log('onNext: %s', x); },
+                function (e) { console.log('onError: %s', e); },
+                function () { console.log('onCompleted'); });
+
+    setTimeout(function () {
+        subscription.dispose();
+    },5000);
+
+</script>
+
+</body>
+</html>
