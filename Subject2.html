@@ -31,6 +31,7 @@ with
 
     source.subscribe(subject);
 
+    // #a
     subSubject1 = subject
         .map(function(x) {return '#a'+x;})
         .subscribe(
@@ -39,7 +40,7 @@ with
             function () { console.log('onCompleted'); }
         );
 
-
+    // #b
     setTimeout(function () {
         subSubject2 = subject
             .filter(function(x){return x%2===0;})
@@ -47,9 +48,9 @@ with
             .subscribe(
                 function (x) { console.log(x); },
                 function (e) { console.log('onError: ' + e.message); },
-                function () { console.log('onCompleted'); }
+                function () { console.log('#b onCompleted'); }
             );
-    }, 2000)
+    }, 2000);
 
 
     setTimeout(function () {

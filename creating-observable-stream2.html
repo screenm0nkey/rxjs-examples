@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+    console.clear();
+
+    var source = Rx.Observable.create(function(observer) {
+        var id = setTimeout(function() {
+            try {
+                // throw 'my bad error';
+                observer.onNext(42);
+                observer.onCompleted();
+            } catch (error) {
+                observer.onError(error);
+            }
+        }, 1000);
+
+        console.log('started');
+
+        return function() {
+            console.log('disposal called');
+            clearTimeout(id);
+        };
+    });
+
+    var sub = source.subscribe(function(x) {
+        console.log('next ' + x);
+    }, function(err) {
+        console.error(err);
+    }, function() {
+        console.info('done');
+    });
+
+</script>
+
+</body>
+</html>
+

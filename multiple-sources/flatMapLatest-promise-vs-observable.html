@@ -5,6 +5,7 @@
     <title></title>
     <script src="/bower_components/angular/angular.min.js"></script>
     <script src="/bower_components/rxjs/dist/rx.all.js"></script>
+    <!--<script src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.0/dist/global/Rx.umd.js"></script>-->
 </head>
 <body ng-app="APP">
 <div>
@@ -63,7 +64,6 @@
     console.clear();
 
     angular.module('APP', [])
-
             .service('dataService', function ($q, $timeout) {
                 var colors = [
                     {name: 'red'},
@@ -121,6 +121,7 @@
                     }, function (newVal) {
                         if (newVal) observer.onNext(newVal);
                     });
+                // flatMapLatest() is switchMap() in rxjs 5.0
                 }).flatMapLatest(function (type) {
                     return Rx.Observable.fromPromise(dataService.getEntities(type));
                 });

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>RefCount</h3>
+
+Refcount stops the publish() from publishing any values until there is at least one observer.
+It will also stop if the observer count goes to 0. so it waits for the first connection before publishing.
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    var clock = Rx.Observable
+            .interval(1000)
+            .take(10)
+            .map(function (x) {
+                return x+1;
+            })
+            .startWith(0)
+            .publish()
+            .refCount();
+
+
+    setTimeout(function () {
+        console.log('a subscribed');
+        clock.subscribe(function(i){console.log('a: ' + i)});
+    }, 1000);
+
+    setTimeout(function () {
+        console.log('b subscribed');
+        clock.subscribe(function(i){console.log('   b: ' + i)});
+    }, 4500);
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
+
+

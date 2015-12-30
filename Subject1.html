@@ -7,29 +7,35 @@
 
 <p>we can see here the subject is both the observerable and observer</p>
 
-<p>See the Observer to make it easier to see what a Subject does</p>
+<p>You can subscribe to it just like an Observable but you can also call the onNext() method like an Observer</p>
+
+<p>See <strong>Observer</strong> to make it easier to see what a Subject does</p>
 
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
     var observer = Rx.Observer.create(
-            function (x) { console.log('Next: 1 ' + x); },
+            function (x) { console.log('Next: ' + x); },
             function (err) { console.log('Error: ' + err); },
-            function () { console.log('Completed 1'); });
+            function () { console.log('Completed '); });
 
     var subject = new Rx.Subject();
 
     subject
-        .map(function(x){return x + 'HELLO';})
+        .map(function(x){return x + ' HELLO';})
         .subscribe(observer);
 
     subject.onNext(42);
+    observer.onNext(42);
     subject.onNext(56);
+    observer.onNext(56);
     subject.onCompleted();
 
-    // Next: 1 42HELLO
-    // Next: 1 56HELLO
-    // Completed 1
+//    Next: 42 HELLO
+//    Next: 42
+//    Next: 56 HELLO
+//    Next: 56
+//    Completed
 
 
 

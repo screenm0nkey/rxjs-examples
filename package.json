@@ -1,0 +1,19 @@
+{
+  "name": "rxjs-examples",
+  "version": "1.0.0",
+  "description": "RXJS examples",
+  "dependencies": {
+    "rxjs": "^5.0.0-beta.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/screenm0nkey/rxjs-examples.git"
+  },
+  "author": "Nicholas Lowman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/screenm0nkey/rxjs-examples/issues"
+  },
+  "homepage": "https://github.com/screenm0nkey/rxjs-examples#readme"
+}

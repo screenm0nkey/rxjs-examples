@@ -5,7 +5,7 @@
 <h3>flatMapLatest</h3>
 <p>
     Transform the items emitted by an Observable into Observables,
-and mirror those items emitted by the most-recently transformed Observable.</p>
+    and mirror those items emitted by the most-recently transformed Observable.</p>
 
 <p>
     <strong>flatMap and mergeAll</strong> does a similar thing in that they will merge all the observables
@@ -16,7 +16,7 @@ and mirror those items emitted by the most-recently transformed Observable.</p>
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
-    
+    // flatMapLatest() is switchMap() in rxjs 5.0
     var source = Rx.Observable
             .range(3, 4)
             .flatMapLatest(function (x) { return Rx.Observable.from([x + 'a', x + 'b', x + 'c']); });

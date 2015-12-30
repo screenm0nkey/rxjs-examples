@@ -1,0 +1,20 @@
+{
+  "name": "rxjs-examples",
+  "version": "0.0.0",
+  "homepage": "https://github.com/screenm0nkey/rxjs-examples",
+  "authors": [
+    "Nick Lowman <digital@nicklowman.co.uk>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.6",
+    "rxjs": "~4.0.0"
+  }
+}
