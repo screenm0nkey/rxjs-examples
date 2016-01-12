@@ -5,18 +5,18 @@
 
 <h3>BehaviorSubject (hot observable)</h3>
 
-    <p>Observers can subscribe to the subject to receive the last (or initial) value
+<p>Observers can subscribe to the subject to receive the last (or initial) value
     and all subsequent notifications.</p>
 
-    <p>
-        If you are looking for BehaviorSubject without
-        initial value see <strong>Rx.ReplaySubject</strong>.
-    </p>
+<p>
+    If you are looking for BehaviorSubject without initial value see <strong>Rx.ReplaySubject</strong>.
+</p>
 
-    
 
-    <p>This also seems to be the same as <strong>Rx.Subject</strong>
-        but without the initial value. Have a look at the RX.Subject example</p>
+<p>
+    This also seems to be the same as <strong>Rx.Subject</strong>
+    but without the initial value. Have a look at the RX.Subject example
+</p>
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
@@ -27,18 +27,20 @@
     // the initial value will be cat
     var subject = new Rx.BehaviorSubject('CATTTT');
 
+    // turn the observable into a hot observable stream
     var subSource = source.subscribe(subject);
 
-    subject.subscribe(function(x){
-        console.log('a '+x);
+    // subscribe to the hot stream
+    subject.subscribe(function (x) {
+        console.log('a ' + x);
     });
 
-
-    setTimeout(function(){
-        subject.subscribe(function(x){
-            console.log('\tb '+x);
+    // subscribe to the hot stream at a later point
+    setTimeout(function () {
+        subject.subscribe(function (x) {
+            console.log('\tb ' + x);
         });
-    },3000);
+    }, 3000);
 
 
     setTimeout(function () {

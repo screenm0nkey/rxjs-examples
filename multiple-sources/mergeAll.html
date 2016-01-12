@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>mergeAll</h3>
+
+<p>
+    Does the same thing as <strong>flatMap()</strong>. <br>
+    Also See <strong>flatMapLatest()</strong>
+</p>
+<p>
+    Merges an observable sequence of observable sequences into a single observable sequence
+    where the values are converted from observeables to actual values.
+    (the output is not in order as you can see below)
+</p>
+
+
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+
+    Rx.Observable
+            .range(3, 4)
+            .flatMap(function (x) {
+                return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
+            })
+            .subscribe(function (x) {
+                console.log(1, x);
+            });
+
+    Rx.Observable
+            .range(3, 4)
+            .map(function (x) {
+                return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
+            })
+            //            .do(function(x){console.log(1, x)}) //observable
+            .mergeAll()
+            .subscribe(function (x) {
+                console.log(2, x);
+            });
+
+    /*
+     Next: 3a
+     Next: 3b
+     Next: 4a
+     Next: 3c
+     Next: 4b
+     Next: 5a
+     Next: 4c
+     Next: 5b
+     Next: 6a
+     Next: 5c
+     Next: 6b
+     Next: 6c
+     Completed
+     * */
+
+
+</script>
+
+</body>
+</html>

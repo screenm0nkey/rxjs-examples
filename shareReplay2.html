@@ -9,23 +9,23 @@
     var source = interval
             .take(4)
             .doAction(function (x) {
-                console.log('do() ' + x);
+                console.log('Side effect');
             });
 
     var published = source
-            .shareReplay(3);
+            .shareReplay(2);
 
-    published.subscribe(createObserver('SourceA '));
-    published.subscribe(createObserver('SourceB '));
+    published.delay(3000).subscribe(createObserver('SourceA'));
+    published.subscribe(createObserver('SourceB'));
 
     // Creating a third subscription after the previous two subscriptions have
     // completed. Notice that no side effects result from this subscription,
     // because the notifications are cached and replayed.
     Rx.Observable
             .return(true)
-            .delay(3000)
+            .delay(12000)
             .flatMap(published)
-            .subscribe(createObserver('\t\tC '));
+            .subscribe(createObserver('SourceC'));
 
     function createObserver(tag) {
         return Rx.Observer.create(
@@ -35,8 +35,8 @@
                 function (err) {
                     console.log('Error: ' + err);
                 },
-                function (x) {
-                    console.log('Completed ' + tag);
+                function () {
+                    console.log('Completed');
                 });
     }
 

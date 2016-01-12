@@ -9,14 +9,19 @@
 <p>Same as map().mergeAll();</p>
 https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap
 
-<p>See <strong>mergeAll()</strong> as it does the same thing. see the examples below which produce same result</p>
+<p>
+    See <strong>mergeAll()</strong> as it does the same thing.
+    see the examples below which produce same result
+</p>
 
 
-<p>Merges an observable sequence of observable sequences into a observable sequence of data from the observables.
-    what is does is subscribe the the observables in the obsersable stream and returns their values.
+<p>
+    Merges an observable sequence of observable sequences into a observable sequence of
+    data from the observables. what is does is subscribe the the observables in the
+    original observable stream and returns their values.
 
-    and outputs all the values but the output is not in order i.e. it doesn't just output
-    everything from the first colelction, then the next.
+    it outputs all the values but the output is not in order i.e. it doesn't just output
+    everything from the first collection, then the next and so on.
 </p>
 
 <p>See <strong>flatMapLatest</strong> example.</p>
@@ -29,18 +34,22 @@ https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap
 
     // it you replace flatmap for map you will just get objects
     var source = Rx.Observable.interval(100).take(10)
-                    .flatMap(x => Rx.Observable.timer(500).map(() => x))
+                    .flatMap(x => Rx.Observable.timer(1500).map(() => x))
 
-    source.subscribe(x => console.log(x.toString()));
+    source.subscribe(function (x) {
+        console.log('a '+x);
+    });
 
 
 
     // does same as above
     var source2 = Rx.Observable.interval(100).take(10)
-                    .map(x => Rx.Observable.timer(500).map(() => x))
+                    .map(x => Rx.Observable.timer(1500).map(() => x))
                     .mergeAll();
 
-    source2.subscribe(x => console.log('\t', x.toString()));
+    source.subscribe(function (x) {
+        console.log('\tb '+x);
+    });
 
 
 

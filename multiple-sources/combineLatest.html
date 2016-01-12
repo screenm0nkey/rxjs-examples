@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p>https://github.com/ReactiveX/RxJava/wiki/Combining-observables</p>
+
+<p> <strong>combineLastest</strong>, when an item is emitted by either of two streams,
+    combineLatest will emit the last emitted data from both streams. it will not start
+    emitting any values until each stream has emitted at least one value.
+</p>
+
+<p>see forkJoin() which does something similar</p>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    var sourceA = Rx.Observable.interval(100).take(8).map(function(x) {
+        return 'a '+ x;
+    });
+
+    
+    var sourceB = Rx.Observable.interval(100).take(3).map(function(x) {
+        return 'b ' + x;
+    });
+
+
+    sourceA.combineLatest(sourceB)
+        .subscribe(function (arr) {
+            console.log(arr[0], '\t\t'+arr[1]);
+        });
+
+
+
+</script>
+
+</body>
+</html>
+
+
