@@ -6,7 +6,7 @@
 <h3>mergeAll</h3>
 
 <p>
-    Does the same thing as <strong>flatMap()</strong>. <br>
+    Does the same thing as <strong>flatMap(). See below for example of both</strong>. <br>
     Also See <strong>flatMapLatest()</strong>
 </p>
 <p>
@@ -20,7 +20,7 @@
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
-
+    /* FLATMAP */
     Rx.Observable
             .range(3, 4)
             .flatMap(function (x) {
@@ -30,6 +30,7 @@
                 console.log(1, x);
             });
 
+    /* MERGEALL */
     Rx.Observable
             .range(3, 4)
             .map(function (x) {
@@ -38,7 +39,7 @@
             //            .do(function(x){console.log(1, x)}) //observable
             .mergeAll()
             .subscribe(function (x) {
-                console.log(2, x);
+                console.log('\tmergeAll ', x);
             });
 
     /*

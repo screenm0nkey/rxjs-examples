@@ -71,24 +71,31 @@
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
+    var GITHUB_URI = 'https://api.github.com/users';
     var refreshButton = document.querySelector('.refresh');
     var closeButton1 = document.querySelector('.close1');
     var closeButton2 = document.querySelector('.close2');
     var closeButton3 = document.querySelector('.close3');
 
-    var refreshClickStream = Rx.Observable.fromEvent(refreshButton, 'click');
     var close1Clicks = Rx.Observable.fromEvent(closeButton1, 'click');
     var close2Clicks = Rx.Observable.fromEvent(closeButton2, 'click');
     var close3Clicks = Rx.Observable.fromEvent(closeButton3, 'click');
 
-    var startupRequestStream = Rx.Observable.just('https://api.github.com/users');
+    // stream return uri
+    var startupRequestStream = Rx.Observable.just(GITHUB_URI);
 
+    //
+    var refreshClickStream = Rx.Observable.fromEvent(refreshButton, 'click');
+
+    // stream returns github uri with random 'since' property
     var requestOnRefreshStream = refreshClickStream
             .map(function () {
                 var randomOffset = Math.floor(Math.random() * 500);
-                return 'https://api.github.com/users?since=' + randomOffset;
+                return GITHUB_URI + '?since=' + randomOffset;
             });
 
+
+    // merge both streams which return github URI
     var requestStream = startupRequestStream.merge(requestOnRefreshStream);
 
     // shareReplay stops network requests on every "suggestionStream.subscribe" by converting

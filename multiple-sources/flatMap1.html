@@ -37,7 +37,7 @@ https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap
                     .flatMap(x => Rx.Observable.timer(1500).map(() => x))
 
     source.subscribe(function (x) {
-        console.log('a '+x);
+        console.log('flatMap '+x);
     });
 
 
@@ -48,7 +48,7 @@ https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap
                     .mergeAll();
 
     source.subscribe(function (x) {
-        console.log('\tb '+x);
+        console.log('\tmergeAll '+x);
     });
 
 
