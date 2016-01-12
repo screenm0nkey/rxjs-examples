@@ -3,30 +3,28 @@
 <head></head>
 <body>
 
-Share replay creates a hot observable. <br>
-https://egghead.io/lessons/rxjs-demystifying-cold-and-hot-observables-in-rxjs <br>
+<p>Share replay creates a hot observable. </p>
 
+<a href="https://egghead.io/lessons/rxjs-demystifying-cold-and-hot-observables-in-rxjs">Link</a>
 
-Note that the 'published.subscribe()' in the timeout gets the last 3 items from
-the 'published' collection before continuing at the same point of the other subscriptions
+<p>
+    Note that the 'published.subscribe()' in the timeout gets the last 3 items from
+    the 'published' collection before continuing at the same point of the other subscriptions
+</p>
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
-    var interval = Rx.Observable.interval(500);
+    var source = Rx.Observable.interval(500).take(12);
+    // create hot observable
+    var hotObservable = source.shareReplay(3);
 
-    var source = interval
-            .take(12)
-            .doAction(function (x) {
-                console.log('Side effect', x);
-            });
-
-    var published = source.shareReplay(3);
-
-    published.subscribe();
+    hotObservable.subscribe(function (x) {
+        console.log('z', x)
+    });
 
     setTimeout(function () {
-        published.subscribe(function (x) {
-            console.log('n', x)
+        hotObservable.subscribe(function (x) {
+            console.log('\tn', x)
         })
     }, 4000)
 

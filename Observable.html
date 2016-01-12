@@ -5,32 +5,32 @@
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
-    var aObs = Rx.Observable
+    var originalStream = Rx.Observable
         .interval(500)
         .take(10)
         .map(function (x) { return x+1; });
 
 
-    var filterObs = aObs.filter(function (x) {
+    var filterStream = originalStream.filter(function (x) {
         return x%2===0;
     });
 
-    var mapObs = filterObs.map(function (x) {
-        return '\tb'+x;
+    var mappedStream = filterStream.map(function (x) {
+        return '\t\tmapped b'+x;
     });
 
 
-    aObs.subscribe(function (x) {
-        console.log('a'+x);
+    originalStream.subscribe(function (x) {
+        console.log('orig'+x);
     });
 
-    mapObs.subscribe(function (x) {
+    mappedStream.subscribe(function (x) {
         console.log(x);
     });
 
     setTimeout(function () {
-        filterObs.subscribe(function (x) {
-            console.log('\t\tc'+x);
+        filterStream.subscribe(function (x) {
+            console.log('\t\tfiltered '+x);
         });
     },1000)
 

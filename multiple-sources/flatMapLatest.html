@@ -17,21 +17,32 @@
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
     // flatMapLatest() is switchMap() in rxjs 5.0
-    var source = Rx.Observable
+    var flatmaplatest = Rx.Observable
             .range(3, 4)
-            .flatMapLatest(function (x) { return Rx.Observable.from([x + 'a', x + 'b', x + 'c']); });
-
-
-    source.subscribe(
-            function (x) {
-                console.log('Next: %s', x);
-            },
-            function (err) {
-                console.log('Error: %s', err);
-            },
-            function () {
-                console.log('Completed');
+            .flatMapLatest(function (x) {
+                return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
             });
+
+
+    var flatmap = Rx.Observable
+            .range(3, 4)
+            .flatMap(function (x) {
+                return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
+            });
+
+
+
+
+
+    flatmaplatest.subscribe(function (x) {
+        console.log('\tfml', x);
+    });
+
+    flatmap.subscribe(function (x) {
+        console.log('fm '+x);
+    });
+
+
 
     /*
      Next: 3a
@@ -41,9 +52,7 @@
      Next: 6b
      Next: 6c
      Completed
-    * */
-
-
+     * */
 
 
 </script>
