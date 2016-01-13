@@ -20,14 +20,12 @@
 
 
     clicks
-    .scan(function (s) {
-        return s+ 1;
-    }, 0)
-    .buffer(clicks.throttle(2000)) // try replacing "clicks.throttle(1000)" with "open"
-    .forEach(function (x) {
-        console.log(x);
-        sendValues(x);
-    });
+        .scan(function (s) { return s+ 1; }, 0)
+        .buffer(clicks.throttle(2000)) // try replacing "clicks.throttle(1000)" with "open"
+        .forEach(function (x) {
+            console.log(x);
+            sendValues(x);
+        });
 
 
     function sendValues(arr) {
