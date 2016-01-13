@@ -2,11 +2,11 @@
 <html lang="en">
 <head></head>
 <body>
-<h3>flatMapLatest</h3>
+<h3>flatMapLatest now called switchMap() in rxjs5</h3>
+<p>read this which explains it
+    http://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html</p>
 <p>
-    Transform the items emitted by an Observable into Observables,
-    and mirror those items emitted by the most-recently transformed Observable.</p>
-
+    this does the same as flatMap() (read flatmap example) but it cancels any previous requests from it's parent.
 <p>
     <strong>flatMap and mergeAll</strong> does a similar thing in that they will merge all the observables
     but displays all the values of the merged observables.
@@ -31,17 +31,13 @@
             });
 
 
-
-
-
     flatmaplatest.subscribe(function (x) {
         console.log('\tfml', x);
     });
 
     flatmap.subscribe(function (x) {
-        console.log('fm '+x);
+        console.log('fm ' + x);
     });
-
 
 
     /*

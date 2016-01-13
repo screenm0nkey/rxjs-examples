@@ -6,14 +6,20 @@
 
 <h3>flatMap</h3>
 
-<p>Same as map().mergeAll();</p>
-https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap
+<h3>flatMap is the Same as <pre>map().mergeAll()</pre></h3>
 
-<p>
-    See <strong>mergeAll()</strong> as it does the same thing.
-    see the examples below which produce same result
+<p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap">Link to video on egghead</a></p>
+
+<h4>flatmap() is also the same as switchMap() (switchMap used to be called flatMapLatest)  </h4>
+
+
+<p>the only differce betwwen flatMap and switchMap is
+    Both operators automatically subscribe to the Observable that the function produces
+    and flatten the result for us. The difference is that the switchMap
+    operator automatically unsubscribes from previous subscriptions as soon as the outer
+    Observable emits new values. this makes it good for keyup searches on form inputs
+    where the previous search can be cancelled.
 </p>
-
 
 <p>
     Merges an observable sequence of observable sequences into a observable sequence of
@@ -42,7 +48,7 @@ https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap
 
 
 
-    // does same as above
+    // does same as above but with map.mergeAll()
     var source2 = Rx.Observable.interval(100).take(10)
                     .map(x => Rx.Observable.timer(1500).map(() => x))
                     .mergeAll();
