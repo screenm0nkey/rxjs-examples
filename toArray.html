@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p>
+    creates a new Observable sequence from an array-like or iterable object. <br>
+    see <strong>fromEvent()</strong>
+</p>
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    var source = Rx.Observable
+            .timer(0, 1000)
+            .take(5);
+
+    source.subscribe(function (x) {
+            console.log('without toArray(): ' + x);
+        });
+
+    source.toArray().subscribe(function (x) {
+        console.log('with toArray(): ' + x);
+    });
+
+
+</script>
+
+</body>
+</html>

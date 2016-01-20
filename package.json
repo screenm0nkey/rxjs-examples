@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "RXJS examples",
   "dependencies": {
-    "rxjs": "^5.0.0-beta.0"
+    "jquery": "^2.2.0",
+    "rxjs": "^5.0.0-beta.0",
+    "virtual-dom": "^2.1.1"
   },
   "devDependencies": {},
   "repository": {

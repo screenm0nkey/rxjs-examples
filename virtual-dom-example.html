@@ -17,7 +17,7 @@
     var vd = window.virtualDom;
 
     let render = function (count) {
-        return vd.h('h2', {className: 'hello'}, ['helloworld ' + count])
+        return vd.h('h2', {className: 'hello'}, ['helloworld ' + count]);
     };
 
     var count = 0;
@@ -34,12 +34,24 @@
                 let patches = vd.diff(view, newView);
                 rootNode = vd.patch(rootNode, patches);
                 view = newView;
-            })
+            });
 
 
 </script>
 
 </body>
 </html>
+
+
+create special view
+create rootNode from view
+insert rootNode into DOM
+
+create newView
+create patches but comparing old view to new view
+update RootNode by patching old rootNode with patches
+store rootNode and view
+
+
 
 

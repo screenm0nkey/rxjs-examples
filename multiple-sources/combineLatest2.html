@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+
+    var clickStream = Rx.Observable.fromEvent(document, 'click');
+    var resizeStream = Rx.Observable.fromEvent(window, 'resize');
+
+    // without the startWith() the stream would have to wait for both things to happen
+    var stream = Rx.Observable.combineLatest(
+            clickStream.startWith({x: 0, y: 0}),
+            resizeStream.startWith({timeStamp: 0}).throttle(200),
+            function (clickEvt, resizeEvt) {
+                return [clickEvt.x, clickEvt.y, resizeEvt.timeStamp].join(' ');
+            }
+    );
+
+
+    stream.subscribe(function (x) {
+        console.log(x);
+    });
+
+
+</script>
+
+</body>
+</html>
+
+
