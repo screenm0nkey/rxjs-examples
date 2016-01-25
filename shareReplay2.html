@@ -2,24 +2,29 @@
 <html lang="en">
 <head></head>
 <body>
+<a href="https://egghead.io/lessons/rxjs-demystifying-cold-and-hot-observables-in-rxjs">Link</a>
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
     var interval = Rx.Observable.interval(1000);
 
     var source = interval
-            .take(4)
+            .take(8)
             .doAction(function (x) {
-                console.log('Side effect');
+                console.log('\t\t\t\tSide effect', x);
             });
 
     var published = source
             .shareReplay(2);
 
-    published.delay(3000).subscribe(createObserver('SourceA'));
-    published.subscribe(createObserver('SourceB'));
+    published.subscribe(createObserver('SourceA'));
+
+    setTimeout(function () {
+        published.subscribe(createObserver('SourceB'));
+    }, 5000)
+
 
     // Creating a third subscription after the previous two subscriptions have
-    // completed. Notice that no side effects result from this subscription,
+    // completed. Notice that it gets the last two values from the published stream
     // because the notifications are cached and replayed.
     Rx.Observable
             .return(true)
@@ -36,7 +41,7 @@
                     console.log('Error: ' + err);
                 },
                 function () {
-                    console.log('Completed');
+                    console.log('Completed ' + tag);
                 });
     }
 

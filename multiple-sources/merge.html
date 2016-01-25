@@ -9,13 +9,20 @@
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
-    var sourceA = Rx.Observable.interval(300).delay(1000).take(5).map(function(x) {
-        return 'a '+ x;
-    });
+    var sourceA = Rx.Observable
+            .interval(300)
+            .delay(1000)
+            .take(5)
+            .map(function(x) {
+                return 'a '+ x;
+            });
 
-    var sourceB = Rx.Observable.interval(1000).take(3).map(function(x) {
-        return '\tb ' + x;
-    });
+    var sourceB = Rx.Observable
+            .interval(1000)
+            .take(3)
+            .map(function(x) {
+                return '\tb ' + x;
+            });
 
     var sourceC = Rx.Observable
             .interval(200)
@@ -25,10 +32,10 @@
                 return '\t\t\ttime ' + val;
             });
 
-    var scourceD = sourceC.merge(sourceB);
+    var sourceD = sourceC.merge(sourceB);
 
 
-    sourceA.merge(scourceD)
+    sourceA.merge(sourceD)
             .take(30)
             .subscribe(function (x) {
                 console.log(x);
