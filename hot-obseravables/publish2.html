@@ -5,6 +5,8 @@
 
 <h3>Publish (hot observable)</h3>
 
+<p>Notice that connect() has to be called</p>
+
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
@@ -18,7 +20,7 @@
 
 
     console.log('a subscribed');
-    clock.subscribe(function(i){console.log('a: ' + i)});
+    clock.subscribe(function(i){console.log('   a: ' + i)});
 
     setTimeout(function () {
         console.log('b subscribed');

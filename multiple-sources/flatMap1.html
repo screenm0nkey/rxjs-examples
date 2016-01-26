@@ -10,10 +10,10 @@
 
 <p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap">Link to video on egghead</a></p>
 
-<h4>flatmap() is also the same as switchMap() (switchMap used to be called flatMapLatest)  </h4>
+<h4>flatmap() is similar to flatMapLatest() (flatMapLatest is called SwitchMap in RXJS 5)  </h4>
 
 
-<p>the only differce betwwen flatMap and switchMap is
+<p>the only differce betwwen flatMap and switchMap (flatmapLatest) is
     Both operators automatically subscribe to the Observable that the function produces
     and flatten the result for us. The difference is that the switchMap
     operator automatically unsubscribes from previous subscriptions as soon as the outer

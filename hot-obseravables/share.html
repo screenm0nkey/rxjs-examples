@@ -19,7 +19,7 @@
     var source = interval
             .take(2)
             .doAction(function (x) {
-                console.log('Side effect');
+                console.log('\nSide effect');
             });
 
     source.subscribe(createObserverA('SourceA'));
@@ -28,7 +28,7 @@
     function createObserverA(tag) {
         return Rx.Observer.create(
                 function (x) {
-                    console.log('Next: ' + tag + x);
+                    console.log('Next: ' + tag);
                 },
                 function (err) {
                     console.log('Error: ' + err);
@@ -46,7 +46,7 @@
     var source = interval
             .take(6)
             .do(function (x) {
-                console.log(x, 'Side effect');
+                console.log('\nSide effect');
             });
 
 
