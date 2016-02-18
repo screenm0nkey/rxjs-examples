@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<pre>
+    sample is a method in Observable instances that, given a time parameter in milliseconds,
+    returns an Observable that emits the last value emitted by the parent Observable in each
+    time interval.
+
+
+</pre>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+
+    var source1 = Rx.Observable.interval(100);
+    var source2 = Rx.Observable.interval(300);
+
+    var source3 = Rx.Observable.combineLatest(
+            source1,
+            source2
+    ).sample(1000)
+    
+    
+    source3.subscribe(function (x) {
+        console.log(x);
+    })
+
+
+
+</script>
+
+</body>
+</html>

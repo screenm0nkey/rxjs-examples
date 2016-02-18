@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/bower_components/rxjs-dom/dist/rx.dom.js"></script>
+<script>
+    var observable = Rx.Observable.create(function (observer) {
+        observer.onNext('Simon');
+        observer.onNext('Jen');
+        observer.onNext('Sergi');
+        observer.onCompleted(); // We are done
+    });
+
+    observable.subscribe(function (val) {
+        console.log(val);
+    });
+
+    setTimeout(function () {
+        observable.subscribe(function (val) {
+            console.log(val);
+        })
+    }, 2000);
+
+
+    Rx.DOM.get('/package.json')
+
+        .subscribe(
+            function onNext(data) {
+                console.log(data.response);
+            }, function onError(err) {
+                console.error(err);
+            }
+        );
+
+</script>
+
+</body>
+</html>
+

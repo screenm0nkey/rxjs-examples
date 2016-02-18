@@ -8,39 +8,47 @@
 
 <h3>flatMap is the Same as <pre>map().mergeAll()</pre></h3>
 
-<p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap">Link to video on egghead</a></p>
+<p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap" target="_blank">Link to video on egghead</a></p>
 
 <h4>flatmap() is similar to flatMapLatest() (flatMapLatest is called SwitchMap in RXJS 5)  </h4>
 
 
-<p>the only differce betwwen flatMap and switchMap (flatmapLatest) is
+<pre>
+    the only differce betwwen flatMap and switchMap (flatmapLatest) is
     Both operators automatically subscribe to the Observable that the function produces
     and flatten the result for us. The difference is that the switchMap
     operator automatically unsubscribes from previous subscriptions as soon as the outer
     Observable emits new values. this makes it good for keyup searches on form inputs
     where the previous search can be cancelled.
-</p>
 
-<p>
     Merges an observable sequence of observable sequences into a observable sequence of
     data from the observables. what is does is subscribe the the observables in the
     original observable stream and returns their values.
 
     it outputs all the values but the output is not in order i.e. it doesn't just output
     everything from the first collection, then the next and so on.
-</p>
 
-<p>See <strong>flatMapLatest</strong> example.</p>
+    See <strong>flatMapLatest</strong> example.
 
-<p>from() converts an array to a rx collection</p>
+    from() converts an array to a rx collection
+</pre>
+
 
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
     // it you replace flatmap for map you will just get objects
-    var source = Rx.Observable.interval(100).take(10)
-                    .flatMap(x => Rx.Observable.timer(1500).map(() => x))
+    var source = Rx.Observable
+                    .interval(100)
+                    .take(10)
+                    .flatMap(function (x) {
+                        return Rx.Observable
+                        .timer(1500)//delay for 1.5sec
+                        .map(function () {
+                            return x;
+                        });
+                    })
 
     source.subscribe(function (x) {
         console.log('flatMap '+x);
@@ -49,11 +57,24 @@
 
 
     // does same as above but with map.mergeAll()
-    var source2 = Rx.Observable.interval(100).take(10)
-                    .map(x => Rx.Observable.timer(1500).map(() => x))
+    var source2 = Rx.Observable
+                    .interval(100)
+                    .take(10)
+                    .map(function (x) {
+                        return Rx.Observable
+                                .timer(1500)//delay for 1.5sec
+                                .map(function () {
+                                    return x;
+                                });
+                    })
+                    .doAction(function(x){
+                        // at this point x is an observable. mergeall will subscibe to each
+                        // and return the value
+                        console.log(x);
+                    })
                     .mergeAll();
 
-    source.subscribe(function (x) {
+    source2.subscribe(function (x) {
         console.log('\tmergeAll '+x);
     });
 

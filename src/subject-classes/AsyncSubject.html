@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Subject</h3>
+
+<pre>
+    AsyncSubject emits the last value of a sequence only if the sequence completes.
+    This value is then cached forever, and any Observer that subscribes after the
+    value has been emitted will receive it right away. AsyncSubject is convenient
+    for asynchronous operations that return a single value, such as Ajax requests.
+
+    AsyncSubject represents the result of an asynchronous action, and you can use
+    it as a substitute for a promise. The difference internally is that a promise
+    will only ever process a single value, whereas AsyncSubject processes all values
+    in a sequence, only ever emitting (and caching) the last one.
+
+    Being able to so easily simulate promises shows the flexibility of the RxJS model.
+    (Even without AsyncSubject, it would be pretty easy to simulate a promise using Observables.)
+</pre>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/bower_components/rxjs-dom/dist/rx.dom.js"></script>
+<script>
+    var delayedRange = Rx.Observable.range(0, 5).delay(1000);
+    var asyncSubject = new Rx.AsyncSubject();
+
+    delayedRange.subscribe(asyncSubject);
+
+    asyncSubject.subscribe(
+        function onNext(item) { console.log(1, 'Value:', item); },
+        function onError(err) { console.log(2, 'Error:', err); },
+        function onCompleted() { console.log(3, 'Completed.'); }
+    );
+
+    // Rx.DOM get's json data and calls onNext(data) on it's observers, which is 'asyncSubject'
+    // asyncSubject is also an observable so it calls onNext(data) on it's observers which is 'observer'
+    // observer calls onNext(data) on it's observers which is 'products.subscribe()...'
+
+    function getProducts(url) {
+        var asyncSubject;
+
+        return Rx.Observable.create(function(observer) { //(1)
+            observer.onNext({response : 'HIT'})
+
+            if (!asyncSubject) {
+                asyncSubject = new Rx.AsyncSubject();
+                Rx.DOM.get(url).subscribe(asyncSubject); //(2)
+            }
+            asyncSubject.subscribe(observer); //(3)
+        });
+    }
+
+    var products = getProducts('/json/people.json'); //(4)
+    // Will trigger request and receive the response when read
+    products.subscribe( //(5)
+            function onNext(result) { console.log('Result 1:', result.response); },
+            function onError(error) { console.log('ERROR', error); }
+    );
+
+    // Will receive the result immediately because it's cached
+    setTimeout(function() { //(6)
+        products.subscribe(
+                function onNext(result) { console.log('Result 2:', result.response); },
+                function onError(error) { console.log('ERROR', error); }
+        );
+    }, 2000);
+
+</script>
+
+</body>
+</html>

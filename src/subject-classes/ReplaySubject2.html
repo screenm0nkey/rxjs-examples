@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h3>ReplaySubject (hot observable)</h3>
+<pre>
+    Our ReplaySubject will cache values that were emitted up to 200 milliseconds ago.
+    We emit three values, each separated by 100 milliseconds, and after 350 milliseconds
+    we subscribe an Observer and we emit yet another value. At the moment of the
+    subscription the items cached are 2 and 3, because 1 happened too long ago
+    (around 250 milliseconds ago), so it is no longer cached.
+</pre>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    var subject = new Rx.ReplaySubject(null, 200); // Buffer size of 200ms
+
+    setTimeout(function () {
+        subject.onNext(1);
+    }, 100);
+    setTimeout(function () {
+        subject.onNext(2);
+    }, 200);
+    setTimeout(function () {
+        subject.onNext(3);
+    }, 300);
+
+    setTimeout(function () {
+        subject.subscribe(function (n) {
+            console.log('Received value:', n);
+        });
+        subject.onNext(4);
+    }, 350);
+
+
+</script>
+
+</body>
+</html>

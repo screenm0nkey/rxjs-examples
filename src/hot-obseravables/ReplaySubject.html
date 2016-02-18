@@ -3,24 +3,25 @@
 <head></head>
 <body>
 <h3>ReplaySubject (hot observable)</h3>
-<p>
-
+<pre>
     Sames a <strong>BehaviorSubject</strong> but doesn't have an initial value and has a buffer size instead.
     it's more like <strong>shareReplay()</strong> which can take a cold observable and make it hot.
 
     <strong>also see RX.Subject()</strong>
-</p>
+</pre>
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
 
-    var subject = new Rx.ReplaySubject(1 /* buffer size */);
+    var subject = new Rx.ReplaySubject(3 /* buffer size */);
 
     subject.onNext('a');
     subject.onNext('b');
     subject.onNext('c');
+    subject.onNext('d');
+    subject.onNext('e');
 
-    var subscription = subject.subscribe(
+    subject.subscribe(
             function (x) {
                 console.log('Next: ' + x.toString());
             },
@@ -31,11 +32,8 @@
                 console.log('Completed');
             });
 
-    // => Next: b
-    // => Next: c
 
-    subject.onNext('d');
-    // => Next: d
+    subject.onNext('f');
 
 </script>
 

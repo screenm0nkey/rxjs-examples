@@ -25,26 +25,26 @@
     var source = Rx.Observable.interval(500);
 
     // the initial value will be cat
-    var subject = new Rx.BehaviorSubject('CATTTT');
+    var behaviorSubject = new Rx.BehaviorSubject('CATTTT');
 
     // turn the observable into a hot observable stream
-    var subSource = source.subscribe(subject);
+    var subSource = source.subscribe(behaviorSubject);
 
     // subscribe to the hot stream
-    subject.subscribe(function (x) {
+    behaviorSubject.subscribe(function (x) {
         console.log('a ' + x);
     });
 
     // subscribe to the hot stream at a later point
     setTimeout(function () {
-        subject.subscribe(function (x) {
+        behaviorSubject.subscribe(function (x) {
             console.log('\tb ' + x);
         });
     }, 3000);
 
 
     setTimeout(function () {
-        subject.onCompleted();
+        behaviorSubject.onCompleted();
         subSource.dispose();
     }, 6000);
 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Subject</h3>
+
+<pre>
+    When an Observer subscribes to a BehaviorSubject, it receives the last
+    emitted value and then all the subsequent values. BehaviorSubject requires
+    that we pro- vide a starting value, so that all Observers will always receive
+    a value when they subscribe to a BehaviorSubject.
+
+    Imagine we want to retrieve a remote file and print its contents
+    on an HTML page, but we want placeholder text while we wait for
+    the contents. We can use a BehaviorSubject for this:
+
+</pre>
+
+<pre id="content"></pre>
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/bower_components/rxjs-dom/dist/rx.dom.js"></script>
+<script>
+
+    var subject = new Rx.BehaviorSubject('Waiting for content');
+
+    subject.subscribe(
+        function(result) {
+            document.getElementById('content').innerText = result.response || result;
+        },
+        function(err) {
+            document.getElementById('content').innerText = 'There was an error retrieving content';
+        });
+
+    setTimeout(function () {
+        Rx.DOM.get('/package.json').subscribe(subject);
+    }, 2000)
+
+
+
+
+
+</script>
+
+</body>
+</html>
