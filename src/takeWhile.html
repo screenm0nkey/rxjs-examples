@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>takeWHile</h3>
+
+
+<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script>
+
+    var source = Rx.Observable.range(1, 20)
+            .takeWhile(function (x) { return x < 5; });
+
+    var subscription = source.subscribe(
+            function (x) {
+                console.log('Next: ' + x);
+            },
+            function (err) {
+                console.log('Error: ' + err);
+            },
+            function () {
+                console.log('Completed');
+            });
+
+
+</script>
+
+</body>
+</html>
+
+
