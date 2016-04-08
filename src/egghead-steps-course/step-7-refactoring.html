@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="Rx5.umd.js"></script>
+</head>
+<body>
+<button id="start">Start</button>
+<button id="half">Half</button>
+<button id="quarter">Quarter</button>
+<button id="stop">Stop</button>
+<button id="reset">Reset</button>
+
+<script>
+    const Observable = Rx.Observable;
+
+    const startButton = document.querySelector('#start');
+    const stopButton = document.querySelector('#stop');
+    const resetButton = document.querySelector('#reset');
+    const halfButton = document.querySelector('#half');
+    const quarterButton = document.querySelector('#quarter');
+
+    const startButtonClick$ = Observable.fromEvent(startButton, 'click');
+    const stopButtonClick$ = Observable.fromEvent(stopButton, 'click');
+    const resetButtonClick$ = Observable.fromEvent(resetButton, 'click');
+    const halfButtonClick$ = Observable.fromEvent(halfButton, 'click');
+    const quarterButtonClick$ = Observable.fromEvent(quarterButton, 'click');
+    const interval$ = Observable.interval(10000);
+
+    const data = {count:0};
+    const inc = function(acc){ return {count: acc.count + 1}; };
+    const reset = function(){ return data; };
+
+    const intervalThatStops$ = interval$
+            .takeUntil(stopButtonClick$);
+
+    const incOrReset$ = Observable.merge(
+            intervalThatStops$.mapTo(inc),
+            resetButtonClick$.mapTo(reset)
+    );
+
+    // the issue below is that the merged observables will all just start the stream. They have no affect on it's speed.
+    // the mapTo() converts the click event object to a number but the stream is replaced further down with switchMapTo()
+    let $scan = Observable.merge(
+        startButtonClick$.mapTo(1000), // the button click events are being converted to (mapTo) number values
+        halfButtonClick$.mapTo(500),
+        quarterButtonClick$.mapTo(250)
+    )
+    .do(function(val){console.log(1, val)}) // logs the numbers from merged stream above i.e. 1000,500,250.
+    .switchMapTo(incOrReset$)               // from here the incOrReset$ stream controls the output, so the
+    .do(function(val){console.log(2, val)}) // do() method here will only log values from incOrReset$
+    .startWith(data)
+    .scan(function(acc, curr) {
+        return curr(acc);
+    });
+
+    $scan.subscribe(function (x) {
+        console.log(x)
+    });
+
+</script>
+</body>
+</html>
