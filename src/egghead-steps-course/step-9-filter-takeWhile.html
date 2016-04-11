@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/lib/Rx5.umd.js"></script>
+</head>
+<body>
+<button id="start">Start</button>
+<button id="half">Half</button>
+<button id="quarter">Quarter</button>
+<button id="stop">Stop</button>
+<button id="reset">Reset</button>
+<hr>
+<input type="text" id="input">
+
+<script>
+    const Observable = Rx.Observable;
+
+    const startButton = document.querySelector('#start');
+    const stopButton = document.querySelector('#stop');
+    const resetButton = document.querySelector('#reset');
+    const halfButton = document.querySelector('#half');
+    const quarterButton = document.querySelector('#quarter');
+    const input = document.querySelector('#input');
+
+    const startButtonClick$ = Observable.fromEvent(startButton, 'click');
+    const stopButtonClick$ = Observable.fromEvent(stopButton, 'click');
+    const resetButtonClick$ = Observable.fromEvent(resetButton, 'click');
+    const halfButtonClick$ = Observable.fromEvent(halfButton, 'click');
+    const quarterButtonClick$ = Observable.fromEvent(quarterButton, 'click');
+    const interval$ = Observable.interval(1000);
+
+    const data = {count:0};
+    const inc = function(acc){ return {count: acc.count + 1}; };
+    const reset = function(){ return data; };
+
+    // the button click events are being converted to number values using mapTo()
+    const speed$ = Observable.merge(
+        startButtonClick$.mapTo(1000),
+        halfButtonClick$.mapTo(500),
+        quarterButtonClick$.mapTo(250)
+    );
+
+    // here two streams are being converted to functions values using mapTo()
+    const mapToFunctions = function (time) {
+        return Observable.merge(
+            Observable.interval(time).takeUntil(stopButtonClick$).mapTo(inc),
+            resetButtonClick$.mapTo(reset)
+        );
+    };
+
+    // we're taking the text values from the user type into the input
+    // map() is the same as mapTo() but it takes a callback
+    const input$ = Observable.fromEvent(input, 'input')
+            .map(function () { return event.target.value; });
+
+
+    let $timer = speed$ // take the numbers values from the $speed Observable
+        .switchMap(mapToFunctions) // switch to a different stream which gets the number values as an arg
+        .startWith(data) // start this stream with a default number
+        .scan(function(acc, curr) { // increase the count
+            return curr(acc);
+        });
+
+    /*
+      if takeWhile() returns true then the functions after never get invoked.
+      try pressing the quarter button, waiting and then type in the input. it will never
+      log "3 Object {count: 1, text: "1"}". This is because takeWhile() has reached it's target
+      of 3. so as soon as combineLatest() receives a value from input$, it will complete the
+      Observable.
+      See step 10 to on how to fix this with withLatestFrom()
+     */
+    Observable.combineLatest(
+        $timer.do(function(data){ console.log(1, data)}),
+        input$.do(function(data){ console.log(2, data)}),
+        function(timer, input){
+            return {count: timer.count, text: input}
+        }
+    )
+    .takeWhile(function (data) {
+        return data.count <= 3; // will "complete the stream at 3
+    })
+    .do(function(data){ console.log(3, data)})
+    .filter(function (data) {
+        var match = data.count === parseInt(data.text,10);
+        console.log(match);
+        if (match) {
+            input.value = '';
+        }
+        return match; // only allow matching values through
+    })
+    .reduce(function(acc) { // reduce the value down to one single value. reduce and scan are the same
+        return acc + 1;     // but scan emits a value every time.
+    },0)
+    .subscribe(function (x) {
+        console.log('\t\t Winning count',x)
+    },
+    function err(){},
+    function complete(){console.log('complete')}
+    );
+
+
+</script>
+</body>
+</html>

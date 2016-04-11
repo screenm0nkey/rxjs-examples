@@ -10,7 +10,7 @@
 <div id="display"></div>
 
 
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
 
     var displayEl = document.querySelector('#display');
@@ -30,7 +30,7 @@
         .filter(function (x) {
           return x === true;
         })
-        .flatMapLatest(function () {
+        .switchMap(function () {
             return source.takeUntil(checked);
         })
         .subscribe(function (x) {
