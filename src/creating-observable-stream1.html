@@ -3,13 +3,13 @@
 <head></head>
 <body>
 
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
     var source = Rx.Observable.create(function (observer) {
         var count = 0;
 
         setInterval(function () {
-            observer.onNext(++count);
+            observer.next(++count);
         },1000);
 
         //observer.onCompleted();
@@ -30,7 +30,7 @@
                 function () { console.log('onCompleted'); });
 
     setTimeout(function () {
-        subscription.dispose();
+        subscription.complete();
     },5000);
 
 </script>

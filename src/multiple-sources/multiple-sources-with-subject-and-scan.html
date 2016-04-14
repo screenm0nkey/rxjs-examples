@@ -5,7 +5,7 @@
 
 
 
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
 
     var sourceA = Rx.Observable.interval(300).map(function(x) {
@@ -32,15 +32,13 @@
             return accumulator
         }, {type : '\t\t\td', val:0})
         .subscribe(function(result) {
-            console.log(result.type, result.val);
+            console.log(1, result.type, result.val);
         });
-
-    
     
     subject
         .take(10)
         .subscribe(function (result) {
-            console.log(result.type, result.val);
+            console.log(2, result.type, result.val);
         })
 
 

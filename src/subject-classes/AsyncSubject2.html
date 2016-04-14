@@ -23,45 +23,34 @@
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script src="/bower_components/rxjs-dom/dist/rx.dom.js"></script>
 <script>
-    var delayedRange = Rx.Observable.range(0, 5).delay(1000);
-    var asyncSubject = new Rx.AsyncSubject();
-
-    delayedRange.subscribe(asyncSubject);
-
-    asyncSubject.subscribe(
-        function onNext(item) { console.log(1, 'Value:', item); },
-        function onError(err) { console.log(2, 'Error:', err); },
-        function onCompleted() { console.log(3, 'Completed.'); }
-    );
-
-    // Rx.DOM get's json data and calls onNext(data) on it's observers, which is 'asyncSubject'
-    // asyncSubject is also an observable so it calls onNext(data) on it's observers which is 'observer'
-    // observer calls onNext(data) on it's observers which is 'products.subscribe()...'
-
+    // Rx.DOM get's json data and calls next(data) on it's observers, which is 'asyncSubject'
+    // asyncSubject is also an observable so it calls next(data) on it's observers which is 'observer'
+    // observer calls next(data) on it's observers which is 'products.subscribe()...'
     function getProducts(url) {
-        var asyncSubject;
+        var asyncSubject$;
 
-        return Rx.Observable.create(function(observer) { //(1)
-            observer.onNext({response : 'HIT'})
+        var products$ = Rx.Observable.create(function(observer) { //(1)
+            observer.next({response : 'HIT'});
 
-            if (!asyncSubject) {
-                asyncSubject = new Rx.AsyncSubject();
-                Rx.DOM.get(url).subscribe(asyncSubject); //(2)
+            if (!asyncSubject$) {
+                asyncSubject$ = new Rx.AsyncSubject();
+                Rx.DOM.get(url).subscribe(asyncSubject$); //(2)
             }
-            asyncSubject.subscribe(observer); //(3)
+            asyncSubject$.subscribe(observer); //(3)
         });
+        return products$;
     }
 
-    var products = getProducts('/json/people.json'); //(4)
-    // Will trigger request and receive the response when read
-    products.subscribe( //(5)
+    var products$ = getProducts('/json/people.json'); //(4)
+    // Will trigger request and receive the response when its ready
+    products$.subscribe( //(5)
             function onNext(result) { console.log('Result 1:', result.response); },
             function onError(error) { console.log('ERROR', error); }
     );
 
     // Will receive the result immediately because it's cached
     setTimeout(function() { //(6)
-        products.subscribe(
+        products$.subscribe(
                 function onNext(result) { console.log('Result 2:', result.response); },
                 function onError(error) { console.log('ERROR', error); }
         );

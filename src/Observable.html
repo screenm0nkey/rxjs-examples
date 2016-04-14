@@ -2,16 +2,16 @@
 <html lang="en">
 <head></head>
 <body>
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
 
-    var originalStream = Rx.Observable
+    var originalStream$ = Rx.Observable
         .interval(500)
         .take(10)
         .map(function (x) { return x+1; });
 
 
-    var filterStream = originalStream.filter(function (x) {
+    var filterStream = originalStream$.filter(function (x) {
         return x%2===0;
     });
 
@@ -20,7 +20,7 @@
     });
 
 
-    originalStream.subscribe(function (x) {
+    originalStream$.subscribe(function (x) {
         console.log('orig'+x);
     });
 

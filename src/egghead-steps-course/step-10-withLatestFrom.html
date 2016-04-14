@@ -67,7 +67,7 @@
         /*
          combineLatest() was waiting for a value from both streams (see step 9)
          before it could complete. with withLatestFrom() the speed$ stream will
-         emit a value and everytime is does the timer$ stream will get the latest
+         emit a value and every time it does the timer$ stream will get the latest
          value from the input$ stream.
          */
         .withLatestFrom(

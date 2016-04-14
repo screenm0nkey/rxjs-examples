@@ -3,77 +3,52 @@
 <head></head>
 <body>
 
-<p>Share creates a hot observable. </p>
+<pre>
+    Share creates a hot observable.
 
-<p>
     Returns an observable sequence that shares a single subscription to the underlying sequence.
-    This operator is a specialization of publish which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-</p>
+    This operator is a specialization of publish which creates a subscription when the
+    number of observers goes from zero to one, then shares that subscription with all
+    subsequent observers until the number of observers returns to zero, at which point
+    the subscription is disposed. (see refCount()
+</pre>
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script>
+    var interval2$ = Rx.Observable.interval(500);
 
-    /* Without share */
-    var interval = Rx.Observable.interval(1000);
+    var source2$ = interval2$
+//        .take(20)
+        .do(function (x) {
+            console.log('\Share', x);
+        });
 
-    var source = interval
-            .take(2)
-            .doAction(function (x) {
-                console.log('\nSide effect');
-            });
-
-    source.subscribe(createObserverA('SourceA'));
-    source.subscribe(createObserverA('SourceB'));
-
-    function createObserverA(tag) {
-        return Rx.Observer.create(
-                function (x) {
-                    console.log('Next: ' + tag);
-                },
-                function (err) {
-                    console.log('Error: ' + err);
-                },
-                function () {
-                    console.log('Completed');
-                });
-    }
-
-
-
-    /* With share */
-    var interval = Rx.Observable.interval(1000).delay(3000);
-
-    var source = interval
-            .take(6)
-            .do(function (x) {
-                console.log('\nSide effect');
-            });
-
-
-    var published = source.share();
+    var published$ = source2$.share();
 
     // When the number of observers subscribed to published observable goes from
     // 0 to 1, we connect to the underlying observable sequence.
-    published.subscribe(createObserverB('SourceE'));
+    var autoDetachObserver1 = published$.subscribe(createObserverB('SourceE'));
     // When the second subscriber is added, no additional subscriptions are added to the
     // underlying observable sequence. As a result the operations that result in side
     // effects are not repeated per subscriber.
+    var autoDetachObserver2;
     setTimeout(function () {
-        published.subscribe(createObserverB('SourceD'));
-    },2000)
+        autoDetachObserver2 = published$.subscribe(createObserverB('SourceD'));
+    },2000);
+
+    // as soon as these are dispose() the stream is stopped
+    setTimeout(function () {
+        autoDetachObserver1.dispose();
+        autoDetachObserver2.dispose();
+    }, 6000)
 
 
     function createObserverB(tag) {
         return Rx.Observer.create(
-                function (x) {
-                    console.log(x, 'Next: ' + tag);
-                },
-                function (err) {
-                    console.log('Error: ' + err);
-                },
-                function () {
-                    console.log('Completed', tag);
-                });
+            function (x) { console.log(x, 'Next: ' + tag);},
+            function (err) { console.log('Error: ' + err);},
+            function () { console.log('Completed', tag);}
+        );
     }
 
 </script>

@@ -11,7 +11,9 @@
     var subscription1, subscription2;
 
     // Creates a cold observable sequence
-    var source = Rx.Observable.interval(1000);
+    var source = Rx.Observable.interval(1000).do(function (val) {
+        console.log(val)
+    });
 
     // Convert the sequence into a hot sequence
     var hot = source.publish();

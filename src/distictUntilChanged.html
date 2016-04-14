@@ -3,24 +3,15 @@
 <head></head>
 <body>
 
-<pre>
-    sample is a method in Observable instances that, given a time parameter in milliseconds,
-    returns an Observable that emits the last value emitted by the parent Observable in each
-    time interval.
-
-
-</pre>
-
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
-
     /* Without key selector */
-    var source = Rx.Observable.of(42, 42, 24, 24)
+    var source = Rx.Observable.of(42, 42, 24, 24, 37, 42, 24)
             .distinctUntilChanged();
 
     var subscription = source.subscribe(
             function (x) {
-                console.log('Next: %s', x);
+                console.log(1, 'Next: %s', x);
             },
             function (err) {
                 console.log('Error: %s', err);
@@ -34,12 +25,14 @@
     // => Completed
 
     /* With key selector */
-    var source = Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
-            .distinctUntilChanged(function (x) { return x.value; });
+    var source2 = Rx.Observable.fromArray([{value: 42}, {value: 42}, {value: 24}, {value: 24}])
+            .distinctUntilChanged(function (x) {
+                return x.value;
+            });
 
-    var subscription = source.subscribe(
+    var subscription = source2.subscribe(
             function (x) {
-                console.log('Next: ' + x.toString());
+                console.log(2, 'Next: ', x);
             },
             function (err) {
                 console.log('Error: ' + err);
@@ -54,11 +47,18 @@
 
     /* With comparer */
     var source = Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
-            .distinctUntilChanged(function (x) { return x.value; }, function (a,b) { return a !== b; });
+            .distinctUntilChanged(
+                function (x) {
+                    return x.value;
+                },
+                function (a,b) {
+                    return a !== b;
+                }
+            );
 
     var subscription = source.subscribe(
             function (x) {
-                console.dir('Next: ' + x.toString());
+                console.dir(3, 'Next: ', x);
             },
             function (err) {
                 console.log('Error: ' + err);

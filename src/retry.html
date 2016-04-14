@@ -3,11 +3,16 @@
 <head></head>
 <body>
 <h3>retry</h3>
-<p>
-    There are two important things to know when using retry. First, if we don’t pass any parameters, it will retry indefinitely until the sequence is finished with no errors. This is dangerous for performance if the Observable keeps producing errors. If we’re using synchronous Observables, it would have the same effect as an infinite loop.
-    <br><br>
-    Second, retry will always retry the whole Observable sequence again, even if some of the items didn’t error. This is important in case you’re causing any side effects when processing items, since they will be reapplied with every retry.
-</p>
+<pre>
+    There are two important things to know when using retry. First, if we don’t pass any parameters,
+    it will retry indefinitely until the sequence is finished with no errors. This is dangerous for
+    performance if the Observable keeps producing errors. If we’re using synchronous Observables,
+    it would have the same effect as an infinite loop.
+
+    Second, retry will always retry the whole Observable sequence again, even if some of the items
+    didn’t error. This is important in case you’re causing any side effects when processing items,
+    since they will be reapplied with every retry.
+</pre>
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
 <script src="/bower_components/rxjs-dom/dist/rx.dom.js"></script>
 <script>

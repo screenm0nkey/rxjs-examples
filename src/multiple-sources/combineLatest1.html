@@ -5,16 +5,15 @@
 
 <pre>https://github.com/ReactiveX/RxJava/wiki/Combining-observables
 
-<strong>combineLastest</strong>, when an item is emitted by either of two streams,
+    <strong>combineLastest</strong>, when an item is emitted by either of two streams,
     combineLatest will emit the last emitted data from both streams as an array
     containing two values. it will not start
     emitting any values until each stream has emitted at least one value.
 
+    see forkJoin() which does something similar
+</pre>
 
-see forkJoin() which does something similar
-    </pre>
-
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
 
     var sourceA = Rx.Observable.interval(100).take(8).map(function(x) {
@@ -22,7 +21,7 @@ see forkJoin() which does something similar
     });
 
 
-    var sourceB = Rx.Observable.interval(100).delay(400).take(3).map(function(x) {
+    var sourceB = Rx.Observable.interval(100).delay(5000).take(3).map(function(x) {
         return 'b ' + x;
     });
 

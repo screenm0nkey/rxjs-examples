@@ -4,7 +4,7 @@
 <body>
 
 
-<h3>flatMap</h3>
+<h3>switchMap and takeUntil</h3>
 
 <input type="checkbox" id="toggle">
 <div id="display"></div>
@@ -16,22 +16,22 @@
     var displayEl = document.querySelector('#display');
     var toggleEl = document.querySelector('#toggle');
 
-    var source = Rx.Observable
+    var source$ = Rx.Observable
         .interval(50)
         .map(function () { return '.'; });
 
 
-    var checked = Rx.Observable
+    var checked$ = Rx.Observable
         .fromEvent(toggleEl, 'change')
         .map(function(e){ return e.target.checked; });
 
 
-    checked
+    checked$
         .filter(function (x) {
           return x === true;
         })
         .switchMap(function () {
-            return source.takeUntil(checked);
+            return source$.takeUntil(checked$);
         })
         .subscribe(function (x) {
             displayEl.innerText += x;

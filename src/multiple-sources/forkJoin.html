@@ -3,25 +3,23 @@
 <head></head>
 <body>
 
-<p> Runs all observable sequences in parallel and collect their last elements.</p>
+<pre> Runs all observable sequences in parallel and collect their last elements.
 
-<p> It returns an observable sequence with an array collecting the last
-    elements of all the input sequences or the result of the result selector if specified.</p>
+ It returns an observable sequence with an array collecting the last
+ elements of all the input sequences or the result of the result selector if specified.</pre>
 
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
-
+<script src="/lib/Rx5.umd.js"></script>
 
 <script>
-
-
     // see syntax success who has used this
     var source = Rx.Observable.forkJoin(
-            Rx.Observable.return(42),
-            Rx.Observable.range(0, 10),
-            Rx.Observable.from([1, 2, 3]),
-            Rx.Observable.fromPromise(fetch('/json/people.json').then(function (res) { return res.json();})),
-            fetch('/json/people.json').then(function (res) { return res.json();})
-    )
+            Rx.Observable.of(42), //42
+            Rx.Observable.range(0, 10), //9
+            Rx.Observable.from([1, 2, 3]), //3
+            Rx.Observable.fromPromise(
+                fetch('/json/people.json').then(function (res) { return res.json();})),
+                fetch('/json/data.json').then(function (res) { return res.json();})
+    );
 
     source.subscribe(
             function (x) {

@@ -9,19 +9,29 @@
 
 <script>
 
-    // trying to share a variable is difficult without using a ReplaySubject or BehaviorSubject
+    // trying to share a variable is difficult without using a Subject,
+    // ReplaySubject or BehaviorSubject
     // as we can see but subscriptions are incrementing the value
-    var observable;
     var obsCount = 0;
+
+    var increaseCount$ = Rx.Observable.interval(1000).do(function () {
+        ++obsCount;
+    });
+
+    var timer$ = Rx.Observable
+        .interval(1000)
+        .do(function(){
+            if (!obsCount) {
+                ++obsCount;
+                increaseCount$.subscribe();
+            }
+        })
+        .map(function () {
+            return obsCount;
+        });
+
     function getObservable () {
-        if (!observable) {
-            var observable = Rx.Observable
-                    .interval(1000)
-                    .map(function () {
-                        return ++obsCount;
-                    });
-        }
-        return observable;
+        return timer$;
     }
 
     getObservable().subscribe(function (x) {
@@ -30,9 +40,10 @@
 
     setTimeout(function () {
         getObservable().subscribe(function (x) {
-            console.log('\tb'+x);
+            console.log('b'+x);
         })
     },3000);
+
 
 
     // same example as above but we return a Behavior Subject. See how they both get the
@@ -41,10 +52,10 @@
     var subCount = 0;
     function getSubject () {
         var observable =  Rx.Observable
-            .interval(1000)
-            .map(function () {
-                return ++subCount;
-            });
+                .interval(1000)
+                .map(function () {
+                    return ++subCount;
+                });
 
         if (!subject) {
             subject = new Rx.BehaviorSubject('Waiting for content');
@@ -62,6 +73,8 @@
             console.log('\t\t\td'+x);
         })
     },5000)
+
+
 
 
 

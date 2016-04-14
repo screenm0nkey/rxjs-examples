@@ -7,7 +7,7 @@
 <button id="btn">Clickme</button>
 
 
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
 
     var btn = document.getElementById('btn');
@@ -23,7 +23,7 @@
             },initialState)
             .subscribe(function (x) {
                 console.log(x);
-            })
+            });
 
 
     clickStream
@@ -32,7 +32,7 @@
             })
             .subscribe(function (x) {
                 console.log(x);
-            })
+            });
 
 
 </script>

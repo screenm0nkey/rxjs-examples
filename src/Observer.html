@@ -5,20 +5,20 @@
 
 <h3>Observer</h3>
 
-<p>The Observer object provides support for push-style iteration over an observable sequence.</p>
+<pre>
+    The Observer object provides support for push-style iteration over an observable sequence.
 
-<p>
     The Observer and Objects interfaces provide a generalized mechanism
     for push-based notification, also known as the observer design pattern.
     The Observable object represents the object that sends notifications (the provider);
     the Observer object represents the class that receives them (the observer).
-</p>
+</pre>
 
 <script src="/bower_components/rxjs/dist/rx.all.js"></script>
-<script>
-    // the observable calls the "onNext" method of the observer
-    var observable = Rx.Observable.return(42);
 
+<script>
+    // the observable calls the "next()" method of the observer
+    var observable$ = Rx.Observable.of(42); //
 
     var observer = Rx.Observer.create(
         function (x) { console.log(1, 'Next:' + x); },
@@ -27,17 +27,14 @@
 
     console.log(2, observer);
 
-    observer.onNext('CAT');
+    observer.next('CAT');
+    observable$.subscribe(observer);
 
-    observable.subscribe(observer);
-
-    observable.subscribe(
+    observable$.subscribe(
         function (x) { console.log(3, 'Next:' + x.toString());},
         function (err) { console.log(3, 'Error: ' + err);},
         function () { console.log(3, 'Completed');}
     );
-
-
 
 </script>
 

@@ -6,7 +6,7 @@
 <p>https://github.com/ReactiveX/RxJava/wiki/Combining-observables</p>
 <p>merge combines two Observables into one</p>
 
-<script src="/bower_components/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
 <script>
 
     var sourceA = Rx.Observable
@@ -26,10 +26,8 @@
 
     var sourceC = Rx.Observable
             .interval(200)
-            .timeInterval()
-            .pluck('interval')
             .map(function (val) {
-                return '\t\t\ttime ' + val;
+                return '\t\t\tc ' + val;
             });
 
     var sourceD = sourceC.merge(sourceB);
