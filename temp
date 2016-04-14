@@ -1,0 +1,4 @@
+write a function to determine whether all of the opening brackets have a closing one "(())()()((()))()((()))(" 
+)( this fails
+	()() this passes
+	(()) this passes 
