@@ -2,3 +2,27 @@ write a function to determine whether all of the opening brackets have a closing
 )( this fails
 	()() this passes
 	(()) this passes 
+	
+	
+	
+	function nick(val) {
+  console.clear()
+  let arr = [];
+  let i = 1;
+  while(i <= val) {
+    if (i%3===0 && i%5===0) {
+      arr.push('FizzBuzz');
+    } 
+    else if (i%5===0) {
+      arr.push('Fizz');
+    }
+    else if (i%3===0) {
+      arr.push('Buzz');
+    } else {
+      arr.push(i)
+    }
+    ++i;
+  }
+  return arr;
+}
+console.log(nick(100).join(','))
