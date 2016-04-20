@@ -3,10 +3,11 @@
 <head></head>
 <body>
 
-<pre> Runs all observable sequences in parallel and collect their last elements.
-
- It returns an observable sequence with an array collecting the last
- elements of all the input sequences or the result of the result selector if specified.</pre>
+<pre>
+    Runs all observable sequences in parallel and collect their last elements.
+    It returns an observable sequence with an array collecting the last
+    elements of all the input sequences or the result of the result selector if specified.
+</pre>
 
 <script src="/lib/Rx5.umd.js"></script>
 
@@ -19,7 +20,7 @@
             Rx.Observable.fromPromise(
                 fetch('/json/people.json').then(function (res) { return res.json();})),
                 fetch('/json/data.json').then(function (res) { return res.json();})
-    );
+            );
 
     source.subscribe(
             function (x) {
@@ -33,9 +34,6 @@
             });
 
     // [42, 9, 3, Object, Object]
-
-
-
 </script>
 
 </body>
