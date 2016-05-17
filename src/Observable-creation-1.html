@@ -5,7 +5,11 @@
 
 <script src="/lib/Rx5.umd.js"></script>
 <script>
-    var source = Rx.Observable.create(function (observer) {
+     /*
+      observer is of type Rx.Subscriber
+      every time next() is called on observer, all subscribers to the stream receive the value.
+      */
+    var source$ = Rx.Observable.create(function (observer) {
         var count = 0;
 
         setInterval(function () {
@@ -20,17 +24,22 @@
         }
     });
 
-    var subscription = source
+
+    source$.subscribe(function (x) { console.log('next(): %s', x); });
+
+
+    var subscription$ = source$
             .map(function (x) {
                 return x + 'a';
             })
             .subscribe(
-                function (x) { console.log('onNext: %s', x); },
+                function (x) { console.log('next(): %s', x); },
                 function (e) { console.log('onError: %s', e); },
                 function () { console.log('onCompleted'); });
 
+    // stop the stream
     setTimeout(function () {
-        subscription.complete();
+        subscription$.complete();
     },5000);
 
 </script>

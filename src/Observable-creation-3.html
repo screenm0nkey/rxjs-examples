@@ -14,24 +14,14 @@
     });
 
     observable.subscribe(function (val) {
-        console.log(val);
+        console.log(1, val);
     });
 
     setTimeout(function () {
         observable.subscribe(function (val) {
-            console.log(val);
+            console.log(2, val);
         })
     }, 2000);
-
-
-    Rx.DOM.get('/package.json')
-        .subscribe(
-            function onNext(data) {
-                console.log(data.response);
-            }, function onError(err) {
-                console.error(err);
-            }
-        );
 
 </script>
 

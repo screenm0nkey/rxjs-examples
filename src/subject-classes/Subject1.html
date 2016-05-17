@@ -28,6 +28,8 @@
         .map(function(x){return x + ' HELLO';})
         .subscribe(observer);
 
+    // see how we can call next() on a Subject and it's subscribers will receive the value.
+    // this is not possible with an Observable.
     subject.onNext(42);
     observer.onNext(42);
     subject.onNext(56);
