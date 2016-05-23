@@ -4,9 +4,11 @@
 <body>
 
 <pre>
-    Works the same as combineLatest(). It waits for each stream to emit atleast one value.
+    withLatestFrom() works the same as combineLatest().
+    It waits for each stream to emit at least one value.
     The interval$ stream will start emitting values
-    but the withLatestFrom() will wait until there is at least one click event before
+    but the withLatestFrom() will wait until there is at
+    least one click event before
     it starts emitting values to the subscriber.
 
     We could add a value to the $click stream startWith() to make it start.
@@ -18,9 +20,9 @@
 
 <script src="/lib/Rx5.umd.js"></script>
 <script>
-    var click$ = Rx.Observable.fromEvent(document.getElementById('but'), 'click')//.startWith({target:'START'});
+    var click$ = Rx.Observable.fromEvent(document.getElementById('but'), 'click');//.startWith({target:'START'});
     var interval$ = Rx.Observable
-        .interval(200)
+        .interval(1000)
         .do(function (count) { console.log('interval', count); })
 
     // combineLatest() is waiting for a value from both before it completes
