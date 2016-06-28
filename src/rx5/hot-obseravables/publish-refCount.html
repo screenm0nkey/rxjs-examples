@@ -6,6 +6,9 @@
 <h3>RefCount</h3>
 
 <pre>
+    .publishReplay(1).refCount() in RxJs 5 is the same as shareReplay(1) in RxJs4
+    <a href="http://stackoverflow.com/questions/34600088/pattern-for-sharereplay1-in-rxjs5" target="_blank">See here</a>
+
     refCount() is a replacement for the connect() call.
     it stops the clock$ stream from publishing any values until there is at least one observer.
     It will also stop if the observer count goes to 0.
