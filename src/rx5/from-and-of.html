@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+    const {Observable} = Rx;
+    const $ = jQuery;
+    const output = $(`<div></div>`);
+    const content = $(document.body).append(output);
+
+
+    Observable.from(["Multiple", "values", "over", "time"])
+            .concatMap(function (message) {
+                return Observable.of(message).delay(1000);
+            })
+            .repeat()
+            .subscribe(function (value) {
+                return output.html(value);
+            });
+
+
+</script>
+
+</body>
+</html>
