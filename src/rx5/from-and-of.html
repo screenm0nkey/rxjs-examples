@@ -12,7 +12,7 @@
     const output = $(`<div></div>`);
     const content = $(document.body).append(output);
 
-
+    //https://gist.github.com/btroncone/d6cf141d6f2c00dc6b35#concatmap
     Observable.from(["Multiple", "values", "over", "time"])
             .concatMap(function (message) {
                 return Observable.of(message).delay(1000);

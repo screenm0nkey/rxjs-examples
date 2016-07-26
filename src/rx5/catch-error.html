@@ -37,9 +37,9 @@
     // USING CATCH()
     var caught = getJSON(['{"1": 1, "2": 2}', '{"1: 1}', '{"1": 1, "2": 2}'])
             .catch(Rx.Observable.return({
-                error: 'There was an error parsing JSON'
-            })
-    );
+                        error: 'There was an error parsing JSON'
+                    })
+            );
     caught.subscribe(function (json) {
                 console.log('Parsed JSON: ', json);
             },
@@ -47,8 +47,6 @@
             function (e) {
                 console.log('ERROR', e.message);
             });
-
-
 
 
 </script>

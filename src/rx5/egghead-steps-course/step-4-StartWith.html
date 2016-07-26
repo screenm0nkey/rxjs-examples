@@ -22,12 +22,12 @@
     const intervalThatStops$ = interval$
             .takeUntil(stopButtonClick$);
 
-    const data = {count:0};
+    const data = {count: 0};
 
     let $scan = startButtonClick$
             .switchMapTo(intervalThatStops$)
             .startWith(data)
-            .scan(function(acc, num) {
+            .scan(function (acc, num) {
                 return {count: acc.count + 1}
             }); // we no longer need the inital scan value (see step-3)
                 // as we are using startwWith(data)

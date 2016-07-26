@@ -28,30 +28,34 @@
     const quarterButtonClick$ = Observable.fromEvent(quarterButton, 'click');
     const interval$ = Observable.interval(1000);
 
-    const data = {count:0};
-    const inc = function(acc){ return {count: acc.count + 1}; };
-    const reset = function(){ return data; };
+    const data = {count: 0};
+    const inc = function (acc) {
+        return {count: acc.count + 1};
+    };
+    const reset = function () {
+        return data;
+    };
 
     const speed$ = Observable.merge(
-        startButtonClick$.mapTo(1000), // the button click events are being converted to (mapTo) number values
-        halfButtonClick$.mapTo(500),
-        quarterButtonClick$.mapTo(250)
+            startButtonClick$.mapTo(1000), // the button click events are being converted to (mapTo) number values
+            halfButtonClick$.mapTo(500),
+            quarterButtonClick$.mapTo(250)
     );
 
     // we're taking two streams and mapping their values to functions
     const mapToFunctions = function (time) {
         return Observable.merge(
-            Observable.interval(time).takeUntil(stopButtonClick$).mapTo(inc),
-            resetButtonClick$.mapTo(reset)
+                Observable.interval(time).takeUntil(stopButtonClick$).mapTo(inc),
+                resetButtonClick$.mapTo(reset)
         );
     };
 
     let $scan = speed$
-        .switchMap(mapToFunctions) // see here we're using switchMap() rather than switchMapTo. switchMap allows us
-        .startWith(data)           // to pass in a function which must return an observable (see mapToFunctions)
-        .scan(function(acc, curr) {
-            return curr(acc);
-        });
+            .switchMap(mapToFunctions) // see here we're using switchMap() rather than switchMapTo. switchMap allows us
+            .startWith(data)           // to pass in a function which must return an observable (see mapToFunctions)
+            .scan(function (acc, curr) {
+                return curr(acc);
+            });
 
     $scan.subscribe(function (x) {
         console.log(x)

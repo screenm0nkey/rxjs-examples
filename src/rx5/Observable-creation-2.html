@@ -7,8 +7,8 @@
 <script>
     console.clear();
 
-    var source = Rx.Observable.create(function(observer) {
-        var id = setTimeout(function() {
+    var source = Rx.Observable.create(function (observer) {
+        var id = setTimeout(function () {
             try {
                 // throw 'my bad error';
                 observer.next(42);
@@ -20,17 +20,17 @@
 
         console.log('started');
         // this is called when the observable stream completes
-        return function() {
+        return function () {
             console.log('disposal called');
             clearTimeout(id);
         };
     });
 
-    var sub = source.subscribe(function(x) {
+    var sub = source.subscribe(function (x) {
         console.log('next ' + x);
-    }, function(err) {
+    }, function (err) {
         console.error(err);
-    }, function() {
+    }, function () {
         console.info('complete');
     });
 

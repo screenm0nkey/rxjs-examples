@@ -14,21 +14,15 @@
     let http$ = Rx.Observable.interval(300);
 
     var obs$ = Rx.Observable
-             .merge(http$)
-             .do(function (val) {
-                 console.log(val, 'hello') // this will log immediately
-             })
+            .merge(http$)
+            .do(function (val) {
+                console.log(val, 'hello') // this will log immediately
+            })
             .delay(2000);
-    
+
     obs$.subscribe(function (val) {
         console.log(val, '\tworld') // this will log after 2 seocnds
     })
-
-
-
-
-
-
 
 
 </script>

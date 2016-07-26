@@ -30,7 +30,9 @@ var gitHubResponse$ = githubRequest$
   .switchMap(function (requestUrl) {
     return Observable.fromPromise(jQuery.getJSON(requestUrl));
   })
-  .do(function (users) { console.log('github response', users) })
+  .do(function (users) {
+    console.log('github response', users)
+  })
   .publishReplay(1).refCount();
 
 
@@ -41,7 +43,7 @@ function getRandomUser(githubUsers) {
 function createSuggestionStream(gitHubResponse$, close$) {
   return gitHubResponse$
     .do(function () {
-      document.querySelectorAll('.close').forEach(function(el){
+      document.querySelectorAll('.close').forEach(function (el) {
         setTimeout(el.click.bind(el), 0);
       })
     })

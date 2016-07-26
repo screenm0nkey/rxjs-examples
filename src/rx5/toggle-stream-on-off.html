@@ -17,25 +17,29 @@
     var toggleEl = document.querySelector('#toggle');
 
     var source$ = Rx.Observable
-        .interval(50)
-        .map(function () { return '.'; });
+            .interval(50)
+            .map(function () {
+                return '.';
+            });
 
 
     var checked$ = Rx.Observable
-        .fromEvent(toggleEl, 'change')
-        .map(function(e){ return e.target.checked; });
+            .fromEvent(toggleEl, 'change')
+            .map(function (e) {
+                return e.target.checked;
+            });
 
 
     checked$
-        .filter(function (x) {
-          return x === true;
-        })
-        .switchMap(function () {
-            return source$.takeUntil(checked$);
-        })
-        .subscribe(function (x) {
-            displayEl.innerText += x;
-        });
+            .filter(function (x) {
+                return x === true;
+            })
+            .switchMap(function () {
+                return source$.takeUntil(checked$);
+            })
+            .subscribe(function (x) {
+                displayEl.innerText += x;
+            });
 
 </script>
 

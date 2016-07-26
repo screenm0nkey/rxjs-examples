@@ -28,9 +28,13 @@
     const quarterButtonClick$ = Observable.fromEvent(quarterButton, 'click');
     const interval$ = Observable.interval(10000);
 
-    const data = {count:0};
-    const inc = function(acc){ return {count: acc.count + 1}; };
-    const reset = function(){ return data; };
+    const data = {count: 0};
+    const inc = function (acc) {
+        return {count: acc.count + 1};
+    };
+    const reset = function () {
+        return data;
+    };
 
     const intervalThatStops$ = interval$
             .takeUntil(stopButtonClick$);
@@ -43,17 +47,21 @@
     // the issue below is that the merged observables will all just start the stream. They have no affect on it's speed.
     // the mapTo() converts the click event object to a number but the stream is replaced further down with switchMapTo()
     let $scan = Observable.merge(
-        startButtonClick$.mapTo(1000), // the button click events are being converted to (mapTo) number values
-        halfButtonClick$.mapTo(500),
-        quarterButtonClick$.mapTo(250)
+            startButtonClick$.mapTo(1000), // the button click events are being converted to (mapTo) number values
+            halfButtonClick$.mapTo(500),
+            quarterButtonClick$.mapTo(250)
     )
-    .do(function(val){console.log(1, val)}) // logs the numbers from merged stream above i.e. 1000,500,250.
-    .switchMapTo(incOrReset$)               // from here the incOrReset$ stream controls the output, so the
-    .do(function(val){console.log(2, val)}) // do() method here will only log values from incOrReset$
-    .startWith(data)
-    .scan(function(acc, curr) {
-        return curr(acc);
-    });
+            .do(function (val) {
+                console.log(1, val)
+            }) // logs the numbers from merged stream above i.e. 1000,500,250.
+            .switchMapTo(incOrReset$)               // from here the incOrReset$ stream controls the output, so the
+            .do(function (val) {
+                console.log(2, val)
+            }) // do() method here will only log values from incOrReset$
+            .startWith(data)
+            .scan(function (acc, curr) {
+                return curr(acc);
+            });
 
     $scan.subscribe(function (x) {
         console.log(x)

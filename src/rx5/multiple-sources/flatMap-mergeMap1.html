@@ -6,11 +6,14 @@
 
 <h3>flatMap</h3>
 
-<h3>flatMap() is called mergeMap() in RxJs5 and is the same as <pre>map().mergeAll()</pre></h3>
+<h3>flatMap() is called mergeMap() in RxJs5 and is the same as
+    <pre>map().mergeAll()</pre>
+</h3>
 
-<p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap" target="_blank">map-vs-flatmap to video on egghead</a></p>
+<p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap" target="_blank">map-vs-flatmap to video on egghead</a>
+</p>
 
-<h4>flatmap() is similar to flatMapLatest() (flatMapLatest is called SwitchMap in RXJS 5)  </h4>
+<h4>flatmap() is similar to flatMapLatest() (flatMapLatest is called switchMap() in RXJS 5) </h4>
 
 <pre>
     the only difference between flatMap() and switchMap() (flatmapLatest) is
@@ -37,39 +40,38 @@
 
     // it you replace flatmap for map you will just get objects
     Rx.Observable
-        .interval(100)
-        .take(10)
-        .mergeMap(function (x) {
-            return Rx.Observable
-                .timer(1500)//delay for 1.5sec
-                .map(function () {
-                    return x;
-                });
-        })
-        .subscribe(function (x) {
-            console.log('flatMap '+x);
-        });
+            .interval(100)
+            .take(10)
+            .mergeMap(function (x) {
+                return Rx.Observable
+                        .timer(1500)//delay for 1.5sec
+                        .map(function () {
+                            return x;
+                        });
+            })
+            .subscribe(function (x) {
+                console.log('flatMap ' + x);
+            });
 
     // does same as above but with map.mergeAll()
     Rx.Observable
-        .interval(100)
-        .take(10)
-        .map(function (x) {
-            return Rx.Observable
-                .timer(1500)//delay for 1.5sec
-                .map(function () {
-                    return x;
-                });
-        })
-        .do(function(x){
-            // at this point x is an observable. mergeAll will subscribe to each observable and return the value
-            console.log(x);
-        })
-        .mergeAll()
-        .subscribe(function (x) {
-            console.log('\tmergeAll '+x);
-        });
-
+            .interval(100)
+            .take(10)
+            .map(function (x) {
+                return Rx.Observable
+                        .timer(1500)//delay for 1.5sec
+                        .map(function () {
+                            return x;
+                        });
+            })
+            .do(function (x) {
+                // at this point x is an observable. mergeAll will subscribe to each observable and return the value
+                console.log(x);
+            })
+            .mergeAll()
+            .subscribe(function (x) {
+                console.log('\tmergeAll ' + x);
+            });
 
 
 </script>

@@ -19,10 +19,10 @@
 <script>
     // flatMapLatest() is switchMap() in rxjs 5.0
     var flatmaplatest = Rx.Observable
-        .range(3, 3)
-        .switchMap(function (x) {
-            return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
-        });
+            .range(3, 3)
+            .switchMap(function (x) {
+                return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
+            });
 
     var flatmap = Rx.Observable
             .range(3, 3)

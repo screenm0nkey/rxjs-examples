@@ -6,22 +6,24 @@
 <script>
 
     var originalStream$ = Rx.Observable
-        .interval(500)
-        .take(10)
-        .map(function (x) { return x+1; });
+            .interval(500)
+            .take(10)
+            .map(function (x) {
+                return x + 1;
+            });
 
 
     var filterStream = originalStream$.filter(function (x) {
-        return x%2===0;
+        return x % 2 === 0;
     });
 
     var mappedStream = filterStream.map(function (x) {
-        return '\t\tmapped b'+x;
+        return '\t\tmapped b' + x;
     });
 
 
     originalStream$.subscribe(function (x) {
-        console.log('orig'+x);
+        console.log('orig' + x);
     });
 
     mappedStream.subscribe(function (x) {
@@ -30,9 +32,9 @@
 
     setTimeout(function () {
         filterStream.subscribe(function (x) {
-            console.log('\t\tfiltered '+x);
+            console.log('\t\tfiltered ' + x);
         });
-    },1000)
+    }, 1000)
 
 </script>
 

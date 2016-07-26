@@ -48,12 +48,12 @@
     /* With comparer */
     var source = Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
             .distinctUntilChanged(
-                function (x) {
-                    return x.value;
-                },
-                function (a,b) {
-                    return a !== b;
-                }
+                    function (x) {
+                        return x.value;
+                    },
+                    function (a, b) {
+                        return a !== b;
+                    }
             );
 
     var subscription = source.subscribe(

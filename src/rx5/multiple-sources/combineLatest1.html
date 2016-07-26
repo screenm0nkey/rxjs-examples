@@ -16,12 +16,12 @@
 <script src="/lib/Rx5.umd.js"></script>
 <script>
 
-    var sourceA = Rx.Observable.interval(100).take(8).map(function(x) {
-        return 'a '+ x;
+    var sourceA = Rx.Observable.interval(100).take(8).map(function (x) {
+        return 'a ' + x;
     });
 
 
-    var sourceB = Rx.Observable.interval(100).delay(5000).take(3).map(function(x) {
+    var sourceB = Rx.Observable.interval(100).delay(5000).take(3).map(function (x) {
         return 'b ' + x;
     });
 
@@ -34,14 +34,13 @@
     // sourceB has a delay so they both start when a=4
     sourceA.combineLatest(
             sourceB,
-            function(a, b) {
-                return a + '\t\t'+ b
+            function (a, b) {
+                return a + '\t\t' + b
             }
-        )
-        .subscribe(function (combinedVal) {
-            console.log(combinedVal);
-        });
-
+    )
+            .subscribe(function (combinedVal) {
+                console.log(combinedVal);
+            });
 
 
 </script>

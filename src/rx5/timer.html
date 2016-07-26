@@ -4,15 +4,14 @@
 <body>
 
 
-
 <script src="/lib/Rx5.umd.js"></script>
 <script>
 
     console.log('Current time: ' + Date.now());
 
     var source = Rx.Observable.timer(
-        5000, /* wait 5 seconds */
-        2000 /* then emit value every 2 second */
+            5000, /* wait 5 seconds */
+            2000 /* then emit value every 2 second */
     );
 
 

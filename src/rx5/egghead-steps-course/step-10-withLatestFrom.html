@@ -31,9 +31,13 @@
     const quarterButtonClick$ = Observable.fromEvent(quarterButton, 'click');
     const interval$ = Observable.interval(1000);
 
-    const data = {count:0};
-    const inc = function(acc){ return {count: acc.count + 1}; };
-    const reset = function(){ return data; };
+    const data = {count: 0};
+    const inc = function (acc) {
+        return {count: acc.count + 1};
+    };
+    const reset = function () {
+        return data;
+    };
 
     const speed$ = Observable.merge(
             startButtonClick$.mapTo(1000),
@@ -49,53 +53,64 @@
     };
 
     const input$ = Observable.fromEvent(input, 'input')
-            .map(function () { return event.target.value; });
+            .map(function () {
+                return event.target.value;
+            });
 
 
     let $timer = speed$
             .switchMap(mapToFunctions)
             .startWith(data)
-            .scan(function(acc, curr) {
+            .scan(function (acc, curr) {
                 return curr(acc);
             });
 
     $timer
-        .do(function(data){ console.log(data)})
-        .takeWhile(function (data) {
-            return data.count <= 5;
-        })
-        /*
-         combineLatest() was waiting for a value from both streams (see step 9)
-         before it could complete. with withLatestFrom() the speed$ stream will
-         emit a value and every time it does the timer$ stream will get the latest
-         value from the input$ stream.
-         */
-        .withLatestFrom(
-                input$.do(function(data){ console.log(data)}),
-                function(timer, input){
-                    return {count: timer.count, text: input}
-                }
-        )
-        .filter(function (data) {
-            var match = data.count === parseInt(data.text,10);
-            console.log(match);
-             return match;
-        })
-        .reduce(function(acc) {
-            return acc + 1;
-        },0)
-        /*
-          the reapeat() normally goes just before a subscribe.
-          it stops the steam from ever completing but what it does is
-          resubscribe the subscriber, so the complete handler will
-          never be called
-         */
-        .repeat()
-        .subscribe(
-                function (x) {console.log('\t\t Winning count',x)},
-                function err(){},
-                function complete(){console.log('complete')}
-        );
+            .do(function (data) {
+                console.log(data)
+            })
+            .takeWhile(function (data) {
+                return data.count <= 5;
+            })
+            /*
+             combineLatest() was waiting for a value from both streams (see step 9)
+             before it could complete. with withLatestFrom() the speed$ stream will
+             emit a value and every time it does the timer$ stream will get the latest
+             value from the input$ stream.
+             */
+            .withLatestFrom(
+                    input$.do(function (data) {
+                        console.log(data)
+                    }),
+                    function (timer, input) {
+                        return {count: timer.count, text: input}
+                    }
+            )
+            .filter(function (data) {
+                var match = data.count === parseInt(data.text, 10);
+                console.log(match);
+                return match;
+            })
+            .reduce(function (acc) {
+                return acc + 1;
+            }, 0)
+            /*
+             the reapeat() normally goes just before a subscribe.
+             it stops the steam from ever completing but what it does is
+             resubscribe the subscriber, so the complete handler will
+             never be called
+             */
+            .repeat()
+            .subscribe(
+                    function (x) {
+                        console.log('\t\t Winning count', x)
+                    },
+                    function err() {
+                    },
+                    function complete() {
+                        console.log('complete')
+                    }
+            );
 
 
 </script>

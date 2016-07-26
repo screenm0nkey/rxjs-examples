@@ -22,9 +22,13 @@
     const stopButtonClick$ = Observable.fromEvent(stopButton, 'click');
     const resetButtonClick$ = Observable.fromEvent(resetButton, 'click');
 
-    const data = {count:0};
-    const inc = function(acc){ return {count: acc.count + 1}; };
-    const reset = function(){ return data; };
+    const data = {count: 0};
+    const inc = function (acc) {
+        return {count: acc.count + 1};
+    };
+    const reset = function () {
+        return data;
+    };
 
     const intervalThatStops$ = interval$
             .takeUntil(stopButtonClick$);
@@ -38,7 +42,7 @@
     let $scan = startButtonClick$
             .switchMapTo(incOrReset$)
             .startWith(data)
-            .scan(function(acc, curr) { // curr will be either inc() or reset();
+            .scan(function (acc, curr) { // curr will be either inc() or reset();
                 return curr(acc);
             });
 

@@ -31,16 +31,19 @@
     const quarterButtonClick$ = Observable.fromEvent(quarterButton, 'click');
     const interval$ = Observable.interval(1000);
 
-    const data = {count:0};
-    const inc = function(acc){ return {count: acc.count + 1}; };
-    const reset = function(){ return data; };
+    const data = {count: 0};
+    const inc = function (acc) {
+        return {count: acc.count + 1};
+    };
+    const reset = function () {
+        return data;
+    };
 
     const speed$ = Observable.merge(
             startButtonClick$.mapTo(1000),
             halfButtonClick$.mapTo(500),
             quarterButtonClick$.mapTo(250)
     );
-
 
 
     const mapToFunctions = function (time) {
@@ -51,29 +54,37 @@
     };
 
     const input$ = Observable.fromEvent(input, 'input')
-        .map(function () { return event.target.value; });
+            .map(function () {
+                return event.target.value;
+            });
 
 
     let $timer = speed$
-        .switchMap(mapToFunctions)
-        .startWith(data)
-        .scan(function(acc, curr) {
-            return curr(acc);
-        });
+            .switchMap(mapToFunctions)
+            .startWith(data)
+            .scan(function (acc, curr) {
+                return curr(acc);
+            });
 
     // this is the point it checks for a match, right before the filter()
     const runningGame$ = $timer
-        .do(function(data){ console.log(data)})
-        .takeWhile(function (data) {
-            return data.count <= 5;
-        })
-        .withLatestFrom(
-            input$.do(function(data){ console.log(data)}),
-            // this is the same mapping function used in combineLatest.
-            // it receives the values from both  $timer and input$
-            function(timer, input){ return {count: timer.count, text: input} }
-        )
-        .share();
+            .do(function (data) {
+                console.log(data)
+            })
+            .takeWhile(function (data) {
+                return data.count <= 5;
+            })
+            .withLatestFrom(
+                    input$.do(function (data) {
+                        console.log(data)
+                    }),
+                    // this is the same mapping function used in combineLatest.
+                    // it receives the values from both  $timer and input$
+                    function (timer, input) {
+                        return {count: timer.count, text: input}
+                    }
+            )
+            .share();
 
 
     runningGame$
@@ -85,20 +96,25 @@
 
 
     runningGame$
-        .filter(function (data) {
-            var match = data.count === parseInt(data.text,10);
-            console.log('match=',match);
-             return match;
-        })
-        .reduce(function(acc) {
-            return acc + 1;
-        },0)
-        .repeat()
-        .subscribe(
-                function (x) {console.log('\t\t Winning count',x)},
-                function err(){},
-                function complete(){console.log('complete')}
-        );
+            .filter(function (data) {
+                var match = data.count === parseInt(data.text, 10);
+                console.log('match=', match);
+                return match;
+            })
+            .reduce(function (acc) {
+                return acc + 1;
+            }, 0)
+            .repeat()
+            .subscribe(
+                    function (x) {
+                        console.log('\t\t Winning count', x)
+                    },
+                    function err() {
+                    },
+                    function complete() {
+                        console.log('complete')
+                    }
+            );
 
 
 </script>

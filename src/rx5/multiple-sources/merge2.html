@@ -13,14 +13,14 @@
             .interval(300)
             .delay(1000)
             .take(5)
-            .map(function(x) {
-                return 'a '+ x;
+            .map(function (x) {
+                return 'a ' + x;
             });
 
     var sourceB = Rx.Observable
             .interval(1000)
             .take(3)
-            .map(function(x) {
+            .map(function (x) {
                 return '\tb ' + x;
             });
 
@@ -38,7 +38,6 @@
             .subscribe(function (x) {
                 console.log(x);
             });
-
 
 
 </script>

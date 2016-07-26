@@ -10,7 +10,9 @@
 <script>
 
     var source = Rx.Observable.range(1, 20)
-            .takeWhile(function (x) { return x < 5; });
+            .takeWhile(function (x) {
+                return x < 5;
+            });
 
     var subscription = source.subscribe(
             function (x) {

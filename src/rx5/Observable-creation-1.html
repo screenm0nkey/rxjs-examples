@@ -5,16 +5,16 @@
 
 <script src="/lib/Rx5.umd.js"></script>
 <script>
-     /*
-      observer is of type Rx.Subscriber
-      every time next() is called on observer, all subscribers to the stream receive the value.
-      */
+    /*
+     observer is of type Rx.Subscriber
+     every time next() is called on observer, all subscribers to the stream receive the value.
+     */
     var source$ = Rx.Observable.create(function (observer) {
         var count = 0;
 
         setInterval(function () {
             observer.next(++count);
-        },1000);
+        }, 1000);
 
         //observer.onCompleted();
 
@@ -25,7 +25,9 @@
     });
 
 
-    source$.subscribe(function (x) { console.log('next(): %s', x); });
+    source$.subscribe(function (x) {
+        console.log('next(): %s', x);
+    });
 
 
     var subscription$ = source$
@@ -33,14 +35,20 @@
                 return x + 'a';
             })
             .subscribe(
-                function (x) { console.log('next(): %s', x); },
-                function (e) { console.log('onError: %s', e); },
-                function () { console.log('onCompleted'); });
+                    function (x) {
+                        console.log('next(): %s', x);
+                    },
+                    function (e) {
+                        console.log('onError: %s', e);
+                    },
+                    function () {
+                        console.log('onCompleted');
+                    });
 
     // stop the stream
     setTimeout(function () {
         subscription$.complete();
-    },5000);
+    }, 5000);
 
 </script>
 

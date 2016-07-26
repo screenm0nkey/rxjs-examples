@@ -22,8 +22,8 @@
     const intervalThatStops$ = interval$
             .takeUntil(stopButtonClick$);
 
-    const data = {count:0};
-    const inc = function(acc){
+    const data = {count: 0};
+    const inc = function (acc) {
         return {count: acc.count + 1};
     };
 
@@ -34,7 +34,7 @@
             .switchMapTo(intervalThatStops$)
             .mapTo(inc)
             .startWith(data)
-            .scan(function(acc, curr) { // curr is the function inc()
+            .scan(function (acc, curr) { // curr is the function inc()
                 return curr(acc);
             });
 

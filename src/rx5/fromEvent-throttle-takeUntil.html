@@ -2,8 +2,20 @@
 <html lang="en">
 <head>
     <style>
-        #box {width: 200px; height:200px; background-color: aquamarine; position : relative; cursor: pointer;}
-        #box > div { height:5px;  width : 5px; position: absolute; background-color: darkred;}
+        #box {
+            width: 200px;
+            height: 200px;
+            background-color: aquamarine;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #box > div {
+            height: 5px;
+            width: 5px;
+            position: absolute;
+            background-color: darkred;
+        }
     </style>
 </head>
 <body>
@@ -22,17 +34,17 @@
     var boxEl = $boxEl[0];
     var preEl = $('#pre')[0];
 
-    function addLittleSquare (evt) {
+    function addLittleSquare(evt) {
         var $el = $('<div>').css({
-            top : evt.y,
-            left : evt.x
+            top: evt.y,
+            left: evt.x
         });
         $boxEl.append($el);
     }
 
 
-    function updateTextArea (str) {
-        preEl.innerText = str  + '\n' + preEl.innerText
+    function updateTextArea(str) {
+        preEl.innerText = str + '\n' + preEl.innerText
     }
 
 
@@ -43,25 +55,23 @@
 
 
     var stream = Rx.Observable.fromEvent(boxEl, 'mousedown')
-        .switchMap(function (evt) {
-            return Rx.Observable.fromEvent(boxEl, 'mousemove').throttleTime(200);
-        })
-        .do(addLittleSquare)
-        .filter(removeNullEvents)
-        .map(function (e) {
-            return 'x'+e.x + '-y' + e.y;
-        })
-        .do(updateTextArea)
-        .takeUntil(Rx.Observable.fromEvent(boxEl, 'mouseup'))
-        .repeat();
+            .switchMap(function (evt) {
+                return Rx.Observable.fromEvent(boxEl, 'mousemove').throttleTime(200);
+            })
+            .do(addLittleSquare)
+            .filter(removeNullEvents)
+            .map(function (e) {
+                return 'x' + e.x + '-y' + e.y;
+            })
+            .do(updateTextArea)
+            .takeUntil(Rx.Observable.fromEvent(boxEl, 'mouseup'))
+            .repeat();
 
 
     stream.subscribe(function (val) {
         console.log(val);
 
     });
-
-
 
 
 </script>

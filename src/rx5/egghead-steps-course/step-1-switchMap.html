@@ -18,7 +18,7 @@
     // so when the startInterval$ receives a click event it will switch over (switchMap) to the
     // interval$ Observerable
     const startInterval$ = startButtonClick$
-            .switchMapTo (interval$);
+            .switchMapTo(interval$);
 
     startInterval$
             .subscribe(function (x) {

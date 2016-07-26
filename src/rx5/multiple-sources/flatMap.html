@@ -2,16 +2,16 @@
 <html lang="en">
 <head></head>
 <body>
-<h3>flatMap</h3>
+<h3>flatMap (mergeMap rxjs5)</h3>
 <pre>
+    flattens observables and returns their value.
+
     flatMap is how we handle dependencies between observables. My sample is contrived,
     but I am returning a value from the first observable that is needed
     by the second observable to calculate a sum.
 
     Like I said this example is contrived, but if we compare this to promises,
     flatMap is how we would create the equivalent of promise chains.
-
-    flattens observables and returns their value
 
     <a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">Combining Multiple RxJs Streams In Angular</a>
 </pre>
@@ -20,12 +20,12 @@
 <script>
     let first = Rx.Observable.of(10);
 
-    first.flatMap(function(operand1) {
+    first.flatMap(function (operand1) {
         return Rx.Observable.of(operand1 + 10);
     })
-    .subscribe(function(res) {
-        console.log(JSON.stringify({msg: '10 + 10 = ' + res}))
-    });
+            .subscribe(function (res) {
+                console.log(JSON.stringify({msg: '10 + 10 = ' + res}))
+            });
 
 </script>
 

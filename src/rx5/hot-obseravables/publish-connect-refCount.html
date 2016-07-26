@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Publish().RefCount() or share() which is the shortcut</h3>
+
+<pre>
+    <a href="http://blog.thoughtram.io/angular/2016/06/16/cold-vs-hot-observables.html">cold-vs-hot-observables</a>
+
+    The publish() operator creates an ConnectableObservable which means it creates an Observable
+    that shares one single subscription to the underlying source. However, the publish operator
+    doesn’t subscribe to the underlying source just yet. It’s more like a gatekeeper that makes
+    sure that subscriptions aren’t made to the underlying source but to the ConnectableObservable instead.
+
+    It’s the job of the connect operator to actually cause the ConnectableObservable to subscribe to
+    the underlying source (the thing that produces values). In our case we’re using refCount which
+    is an operator that builds up on connect and causes the ConnectableObservable to subscribe
+    to the underlying source as soon as there is a first subscriber and to unsubscribe from it
+    as soon as there’s no subscriber anymore. It simply keeps track of how many subscriptions
+    are made to the ConnectableObservable.
+
+    <strong>
+        .publishReplay(1).refCount() in RxJs 5 is the same as shareReplay(1) in RxJs4
+        <a href="http://stackoverflow.com/questions/34600088/pattern-for-sharereplay1-in-rxjs5"
+           target="_blank">See here</a>
+    </strong>
+
+    refcount() below stops the clock$ stream from publishing any values until there is at least one observer.
+    It will also stop if the observer count goes to 0. so it waits for the first connection before publishing.
+</pre>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+    var clock$ = Rx.Observable
+            .interval(500)
+            .take(10)
+            .map(function (x) {
+                return x + 1;
+            })
+            .startWith(0)
+            .publish()
+            .refCount();
+
+    //    clock.connect();
+
+    setTimeout(function () {
+        console.log('a subscribed');
+        clock$.subscribe(function (i) {
+            console.log('a: ' + i)
+        });
+    }, 2000);
+
+    setTimeout(function () {
+        console.log('b subscribed');
+        clock$.subscribe(function (i) {
+            console.log('   b: ' + i)
+        });
+    }, 4500);
+
+
+</script>
+
+</body>
+</html>
+
+

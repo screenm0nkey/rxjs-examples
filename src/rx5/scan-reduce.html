@@ -20,9 +20,9 @@ See here <a href="https://egghead.io/lessons/rxjs-aggregating-streams-with-reduc
     source$.reduce(function (accumulator, value) {
         return accumulator + value;
     }, 'REDUCE ')
-    .subscribe(function (result) {
-        console.log(result);
-    });
+            .subscribe(function (result) {
+                console.log(result);
+            });
 
     // scan emits a value every time it receives a value
     source$.scan(function (accumulator, value) {
@@ -32,50 +32,42 @@ See here <a href="https://egghead.io/lessons/rxjs-aggregating-streams-with-reduc
     });
 
 
-
-    
     var avg$ = Rx.Observable.range(0, 5)
-        .reduce(function (prev, cur) {
-            return {
-                sum: prev.sum + cur,
-                count: prev.count + 1
-            };
-        },{
-            sum: 0,
-            count: 0
-        })
-        .map(function (o) {
-            return o.sum / o.count;
-        });
+            .reduce(function (prev, cur) {
+                return {
+                    sum: prev.sum + cur,
+                    count: prev.count + 1
+                };
+            }, {
+                sum: 0,
+                count: 0
+            })
+            .map(function (o) {
+                return o.sum / o.count;
+            });
 
     avg$.subscribe(function (x) {
         console.log('Reduce Average is: ', x);
     });
 
 
-
     var scanAvg$ = Rx.Observable.interval(1000)
-        .scan(function (prev, cur) {
-            return {
-                sum: prev.sum + cur,
-                count: prev.count + 1
-            };
-        },{
-            sum: 0,
-            count: 0
-        })
-        .map(function (o) {
-            return o.sum / o.count;
-        });
+            .scan(function (prev, cur) {
+                return {
+                    sum: prev.sum + cur,
+                    count: prev.count + 1
+                };
+            }, {
+                sum: 0,
+                count: 0
+            })
+            .map(function (o) {
+                return o.sum / o.count;
+            });
 
     scanAvg$.subscribe(function (x) {
         console.log('Scan Average is: ', x);
     });
-
-
-
-
-
 
 
 </script>

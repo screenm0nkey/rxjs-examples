@@ -10,12 +10,12 @@
 <script>
 
     var source = Rx.Observable
-        .timer(0, 1000)
-        .take(5);
+            .timer(0, 1000)
+            .take(5);
 
     source.subscribe(function (x) {
-            console.log('without toArray(): ' + x);
-        });
+        console.log('without toArray(): ' + x);
+    });
 
     // this will output the whole stream on completion as an array
     source.toArray().subscribe(function (x) {

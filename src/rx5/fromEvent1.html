@@ -20,7 +20,7 @@
     clickStream
             .scan(function (accumulator, e) {
                 return e.x;
-            },initialState)
+            }, initialState)
             .subscribe(function (x) {
                 console.log(x);
             });

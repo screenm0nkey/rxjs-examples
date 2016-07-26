@@ -13,26 +13,27 @@
 <h1 id="total"></h1>
 
 
-
 <script src="/lib/Rx5.umd.js"></script>
 <script>
     var sub = document.getElementById('sub');
     var clickStream$ = Rx.Observable.fromEvent(document.getElementsByTagName('button'), 'click');
 
     var st$ = clickStream$
-        .do(function () {
-            document.getElementById('total').innerText = '';
-        })
-        .map(function (ev) { return parseInt(ev.target.value, 10); })
-        .bufferCount(3)
-        .do(function(val){
-            sub.innerText = val.join('+');
-        })
-        .map(function (val) {
-            return val.reduce(function (curr, newVal) {
-                return curr + newVal;
-            }, 0)
-        });
+            .do(function () {
+                document.getElementById('total').innerText = '';
+            })
+            .map(function (ev) {
+                return parseInt(ev.target.value, 10);
+            })
+            .bufferCount(3)
+            .do(function (val) {
+                sub.innerText = val.join('+');
+            })
+            .map(function (val) {
+                return val.reduce(function (curr, newVal) {
+                    return curr + newVal;
+                }, 0)
+            });
 
     st$.delay(1000).subscribe(function (val) {
         sub.innerHTML = '';
@@ -41,7 +42,6 @@
     st$.subscribe(function (val) {
         document.getElementById('total').innerText = val;
     });
-
 
 
 </script>

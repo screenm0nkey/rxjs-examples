@@ -15,7 +15,7 @@
     var clickStream = Rx.Observable.fromEvent(document, 'click');
     var resizeStream = Rx.Observable.fromEvent(window, 'resize');
 
-    // without the startWith() the stream would have to wait for both things to happen
+    // without the startWith() the stream would have to wait for both streams to emit a value first
     var stream = Rx.Observable.combineLatest(
             clickStream.startWith({x: 0, y: 0}),
             resizeStream.startWith({timeStamp: 0}).throttleTime(200),

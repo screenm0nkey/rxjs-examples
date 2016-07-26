@@ -9,10 +9,10 @@
 <script src="/lib/Rx5.umd.js"></script>
 <script>
     var source = Rx.Observable
-        .range(3, 4)
-        .flatMap(function (x) {
-            return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
-        });
+            .range(3, 4)
+            .flatMap(function (x) {
+                return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
+            });
 
     source.subscribe(
             function (x) {
@@ -39,7 +39,7 @@
      Next: 6b
      Next: 6c
      Completed
-    * */
+     * */
 
 </script>
 
