@@ -23,9 +23,9 @@
     first.flatMap(function (operand1) {
         return Rx.Observable.of(operand1 + 10);
     })
-            .subscribe(function (res) {
-                console.log(JSON.stringify({msg: '10 + 10 = ' + res}))
-            });
+    .subscribe(function (res) {
+        console.log(JSON.stringify({msg: '10 + 10 = ' + res}))
+    });
 
 </script>
 

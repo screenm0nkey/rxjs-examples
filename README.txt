@@ -1,1 +1,1 @@
-Just run live-server from the root.
+Just run npm start
