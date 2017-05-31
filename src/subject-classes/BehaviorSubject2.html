@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>BehaviorSubject (Hot)</h3>
+<script src="/lib/log-color.js"></script>
+<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script src="/lib/rxjs-dom/dist/rx.dom.js"></script>
+<script>
+
+  var subject = new Rx.BehaviorSubject(new Date().getTime());
+
+  subject.subscribe(function (x) {
+    log(x, 'red');
+  });
+
+  subject.subscribe(function (x) {
+    log(x, 'green');
+  });
+
+  subject.onNext(new Date().getTime());
+
+
+  setTimeout(function () {
+    subject.subscribe(function (x) {
+      log(x, 'blue');
+    });
+  }, 500);
+
+  setTimeout(function () {
+    subject.asObservable().subscribe(function (x) {
+      log(x, 'orange');
+    });
+  }, 1000);
+
+
+</script>
+
+</body>
+</html>

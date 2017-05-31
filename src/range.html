@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<pre>
+    Generates an observable sequence of integral numbers within a
+    specified range, using the specified scheduler to send out
+    observer messages.
+
+    example below emits an integer starting with 2 and then emits another 3 integers
+</pre>
+<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script>
+
+  var source = Rx.Observable.range(2, 3);
+
+  var subscription = source.subscribe(
+    function (x) {
+      console.log('Next: ' + x);
+    },
+    function (err) {
+      console.log('Error: ' + err);
+    },
+    function () {
+      console.log('Completed');
+    });
+
+  // => Next: 2
+  // => Next: 3
+  // => Next: 4
+  // => Completed
+
+
+</script>
+
+</body>
+</html>

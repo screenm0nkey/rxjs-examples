@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p>Share replay creates a hot observable. </p>
+
+<a href="https://egghead.io/lessons/rxjs-demystifying-cold-and-hot-observables-in-rxjs">Link</a>
+
+<pre>
+  Note that the 'published.subscribe()' in the timeout gets the last 3 items from
+  the 'published' collection before continuing at the same point of the other subscriptions
+</pre>
+
+<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script>
+  var source = Rx.Observable.interval(500).take(12);
+  // create hot observable
+  var hotObservable = source.shareReplay(3);
+
+  hotObservable.subscribe(function (x) {
+    log(x, 'green')
+  });
+
+  setTimeout(function () {
+    hotObservable.subscribe(function (x) {
+      log(x, 'red')
+    })
+  }, 4000)
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css"/>
+  <script src="/bower_components/leaflet/dist/leaflet.js"></script>
+  <script src="/lib/rxjs/dist/rx.all.js"></script>
+  <script src="/lib/rxjs-dom/dist/rx.dom.js"></script>
+  <title>Earthquake map</title>
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    #map {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+  var QUAKE_URL = 'http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojsonp';
+
+  function loadJSONP(url) {
+    var script = document.createElement('script');
+    script.src = url;
+    var head = document.getElementsByTagName('head')[0];
+    head.appendChild(script);
+  }
+  // this draws the map
+  var map = L.map('map').setView([33.858631, -118.279602], 7);
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+</script>
+
+<script>
+  // Wait, what is that blatant global function window.eqfeed_callback doing in our code?
+  // Well, it turns out that JSONP URLs often provide a way—by adding a querystring in the
+  // URL—to specify the function name to handle the response, but the USGS site doesn’t
+  // allow that, so we need to create a global function with the name they decided
+  // we must use, which is eqfeed_callback.
+  var quakes = Rx.Observable
+    .interval(5000)
+    .flatMap(function () {
+      return Rx.DOM.jsonpRequest({
+        url: QUAKE_URL,
+        jsonpCallback: 'eqfeed_callback'
+      }).retry(3);
+    })
+    .flatMap(function (result) {
+      return Rx.Observable.from(result.response.features);
+    })
+    .distinct(function (quake) {
+      return quake.properties.code;
+    });
+
+  quakes.subscribe(function (quake) {
+    console.log(new Date(quake.properties.time), quake.properties.mag, quake.properties.place);
+    var coords = quake.geometry.coordinates;
+    var size = quake.properties.mag * 10000;
+
+    L.circle([coords[1], coords[0]], size).addTo(map);
+  });
+
+
+</script>
+</body>
+</html>

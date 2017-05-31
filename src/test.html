@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  var like = 1;
+  var unlike = -1;
+  var likeCount = 0;
+
+  var Tweet = function (str) {
+    this.text = str;
+    this.likes = new Rx.Subject();
+  };
+
+  var tweets = new Rx.Subject();
+
+  tweets.subscribe(function (tweet) {
+    console.log(tweet.text);
+  });
+
+  tweets.flatMap(function (tweet) {
+    return tweet.likes;
+  })
+    .subscribe(function (likeAction) {
+      likeCount = likeCount + likeAction;
+      console.log(`Total Likes: ${likeCount}`);
+    });
+
+  let firstTweet = new Tweet('first tweet');
+  let secondTweet = new Tweet('second tweet');
+
+  tweets.next(firstTweet);
+  tweets.next(secondTweet);
+
+  firstTweet.likes.next(like);
+  secondTweet.likes.next(like);
+  secondTweet.likes.next(like);
+  secondTweet.likes.next(unlike);
+
+</script>
+
+</body>
+</html>

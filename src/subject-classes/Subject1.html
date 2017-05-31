@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Subject (hot observable)</h3>
+
+<pre>
+    we can see here the subject is both the observerable and observer
+
+    You can subscribe to it just like an Observable but you can also call the
+    onNext() method like an Observer
+
+    See <strong>Observer</strong> to make it easier to see what a Subject does
+</pre>
+
+
+<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script>
+  var observer = Rx.Observer.create(
+    function (x) {
+      log(x.val, x.col);
+    },
+    function (err) {
+      console.log('Error: ' + err);
+    },
+    function () {
+      console.log('Completed ');
+    });
+
+  var subject = new Rx.Subject();
+
+  subject
+    .map(function (x) {
+      x.val += ' HELLO';
+      return x;
+    })
+    .subscribe(observer);
+
+  // see how we can call next() on a Subject and it's subscribers will receive the value.
+  // this is not possible with an Observable.
+  subject.onNext({val: 42, col: 'red'});
+  observer.onNext({val: 42, col: 'green'});
+  subject.onNext({val: 56, col: 'red'});
+  observer.onNext({val: 56, col: 'green'});
+  subject.onCompleted();
+
+  //    Next: 42 HELLO
+  //    Next: 42
+  //    Next: 56 HELLO
+  //    Next: 56
+  //    Completed
+
+</script>
+
+</body>
+</html>

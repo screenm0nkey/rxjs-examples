@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="/lib/Rx5.umd.js"></script>
+</head>
+<body>
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+
+<script>
+  const Observable = Rx.Observable;
+
+  const startButton = document.querySelector('#start');
+  const stopButton = document.querySelector('#stop');
+
+  const startButtonClick$ = Observable.fromEvent(startButton, 'click');
+  const interval$ = Observable.interval(1000);
+  const stopButtonClick$ = Observable.fromEvent(stopButton, 'click');
+
+  const intervalThatStops$ = interval$
+    .takeUntil(stopButtonClick$);
+
+  let $scan = startButtonClick$
+    .switchMapTo(intervalThatStops$)
+    .scan(function (acc, num) { // num is the value being emitted from interval$
+      return {count: acc.count + 1}
+    }, {count: 0});
+
+  $scan.subscribe(function (x) {
+    console.log(x)
+  });
+
+</script>
+</body>
+</html>

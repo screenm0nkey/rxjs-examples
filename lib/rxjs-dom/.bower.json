@@ -1,0 +1,41 @@
+{
+  "name": "rxjs-dom",
+  "version": "7.0.3",
+  "main": [
+    "dist/rx.dom.js",
+    "dist/rx.dom.compat.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Reactive-Extensions/RxJS-DOM.git"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "rxjs": "*"
+  },
+  "ignore": [
+    ".*",
+    "*.bat",
+    "*.md",
+    "*.min.*",
+    "*.txt",
+    "*.log",
+    "package.json",
+    "node_modules",
+    "doc",
+    "examples",
+    "src",
+    "tests"
+  ],
+  "homepage": "https://github.com/Reactive-Extensions/RxJS-DOM",
+  "_release": "7.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v7.0.3",
+    "commit": "cc42f2d64b7a8db9fcc8b0efdcd706dfc85dcbcf"
+  },
+  "_source": "git://github.com/Reactive-Extensions/RxJS-DOM.git",
+  "_target": "~7.0.3",
+  "_originalSource": "rx-dom",
+  "_direct": true
+}

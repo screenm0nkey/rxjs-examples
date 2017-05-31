@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Subject</h3>
+
+<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script src="/lib/rxjs-dom/dist/rx.dom.js"></script>
+<script>
+  // Rx.DOM gets the json data and calls .next(data) on it's observers, which in this case it the asyncSubject.
+  // asyncSubject is also an observable so it calls .next(data) on it's observers which is the 'observer'.
+  // the observer calls .next(data) on it's observers which is 'products.subscribe()...'
+  // there is a delay on the Rx.DOM to simulate a slow http
+
+  /*
+   In this code, when getProducts is called with a URL, it returns an Observer that emits
+   the result of the HTTP GET request. Here’s how it breaks down:
+   1 getProducts returns an Observable sequence. We create it here.
+   2 If we haven’t created an AsyncSubject yet, we create it and subscribe it to
+   the Observable that Rx.DOM.Request.get(url) returns.
+   3 We subscribe the Observer to the AsyncSubject. Every time an Observer subscribes to the Observable,
+   it will actually be subscribed to the AsyncSubject, which is acting as a proxy between
+   the Observable retrieving the URL and the Observers.
+   4 We create the Observable that retrieves the URL "products" and store it in the products variable.
+   5 This is the first subscription and will kick off the URL retrieval and log the results when the URL is retrieved.
+   6 This is the second subscription, which runs five seconds after the first one. Since at that time
+   the URL has already been retrieved, there’s no need for another network request.
+   It will receive the result of the request immediately because it is already stored in the AsyncSubject subject.
+  */
+
+
+  function getProducts(url) { //(1)
+    var asyncSubject$;
+    var products$ = Rx.Observable.create(function (observer) {
+      observer.next({response: 'HIT'});
+      if (!asyncSubject$) {
+        console.log(1234);
+        asyncSubject$ = new Rx.AsyncSubject();
+        Rx.DOM.get(url).delay(1000).subscribe(asyncSubject$); //(2)
+      }
+      asyncSubject$.subscribe(observer); //(3)
+    });
+    return products$;
+  }
+
+  var products$ = getProducts('/json/people.json'); //(4)
+
+  // Will trigger request and receive the response when its ready
+  products$.subscribe( //(5)
+    function onNext(result) {
+      console.log('Result 1:', result.response);
+    },
+    function onError(error) {
+      console.log('ERROR', error);
+    }
+  );
+
+  // Will receive the result immediately because it's cached
+  setTimeout(function () { //(6)
+    products$.subscribe(
+      function onNext(result) {
+        console.log('Result 2:', result.response);
+      },
+      function onError(error) {
+        console.log('ERROR', error);
+      }
+    );
+  }, 3000);
+
+</script>
+
+</body>
+</html>

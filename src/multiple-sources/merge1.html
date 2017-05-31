@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p>https://github.com/ReactiveX/RxJava/wiki/Combining-observables</p>
+<p>merge combines two Observables into one</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  // imagine that http$ is an observable returned from an angular2 http request
+  // we could add a delay to all requests i.e. 2 seconds
+  let http$ = Rx.Observable.interval(300);
+
+  var obs$ = Rx.Observable
+    .merge(http$)
+    .do(function (val) {
+      console.log(val, 'hello') // this will log immediately
+    })
+    .delay(2000);
+
+  obs$.subscribe(function (val) {
+    console.log(val, '\tworld') // this will log after 2 seocnds
+  })
+
+
+</script>
+
+</body>
+</html>
+
+

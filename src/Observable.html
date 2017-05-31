@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  var originalStream$ = Rx.Observable
+    .interval(500)
+    .take(10)
+    .map(function (x) {
+      return x + 1;
+    });
+
+
+  var filterStream = originalStream$.filter(function (x) {
+    return x % 2 === 0;
+  });
+
+  var mappedStream = filterStream.map(function (x) {
+    return '\t\tmapped b' + x;
+  });
+
+
+  originalStream$.subscribe(function (x) {
+    console.log('orig' + x);
+  });
+
+  mappedStream.subscribe(function (x) {
+    console.log(x);
+  });
+
+  setTimeout(function () {
+    filterStream.subscribe(function (x) {
+      console.log('\t\tfiltered ' + x);
+    });
+  }, 1000)
+
+</script>
+
+</body>
+</html>
