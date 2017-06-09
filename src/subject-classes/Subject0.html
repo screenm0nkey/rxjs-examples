@@ -32,11 +32,11 @@ with
 
   // #a
   sub1 = subject$
-    .map(function (x) {
+    .map((x)=> {
       return '#a' + x;
     })
     .subscribe(
-      function (x) {
+      (x)=> {
         log(x, 'red');
       },
       function (e) {
@@ -48,16 +48,16 @@ with
     );
 
   // #b
-  setTimeout(function () {
+  setTimeout(() => {
     sub2 = subject$
-      .filter(function (x) {
+      .filter((x)=> {
         return x % 2 === 0;
       })
-      .map(function (x) {
+      .map((x)=> {
         return '\t#b' + x;
       })
       .subscribe(
-        function (x) {
+        (x)=> {
           log(x, 'green');
         },
         function (e) {
@@ -72,7 +72,7 @@ with
   debugger
 
 
-  setTimeout(function () {
+  setTimeout(() => {
     subject$.onCompleted();
     sub1.dispose();
     sub2.dispose();

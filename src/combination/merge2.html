@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p><a href="https://github.com/ReactiveX/RxJava/wiki/Combining-observables" target="_blank">
+  https://github.com/ReactiveX/RxJava/wiki/Combining-observables
+</a></p>
+<p>merge combines two Observables into one</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  const red$ = Rx.Observable
+    .interval(300)
+    .delay(1000)
+    .take(5)
+    .map(x=>({x:x, col: 'red'}));
+
+  const green$ = Rx.Observable
+    .interval(1000)
+    .take(3)
+    .map(x=>({x:x, col: 'green'}));
+
+  const orange$ = Rx.Observable
+    .interval(200)
+    .map(x=>({x:x, col: 'orange'}));
+
+  const orangeGreen$ = orange$.merge(green$);
+
+  red$.merge(orangeGreen$)
+    .take(30)
+    .subscribe((obj)=>log(obj.x, obj.col));
+
+
+</script>
+
+</body>
+</html>
+
+

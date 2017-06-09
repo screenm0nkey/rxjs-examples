@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+
+<h3>switchMap</h3>
+
+<input type="checkbox" id="toggle">
+<div id="display"></div>
+
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const interval$ = Rx.Observable
+    .interval(50)
+    .map(_ => '.');
+
+  const change$ = Rx.Observable
+    .fromEvent(document.querySelector('#toggle'), 'change')
+    .map(e => e.target.checked);
+
+  // with switchmap you are switching to another stream
+  change$
+    .filter(x => x === true)
+    .switchMap(() => interval$.takeUntil(change$))
+    .subscribe(x => document.querySelector('#display').innerText += x);
+
+</script>
+
+</body>
+</html>

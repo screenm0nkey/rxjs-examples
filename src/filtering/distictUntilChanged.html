@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  /* Without key selector */
+  Rx.Observable.of(42, 42, 24, 24, 37, 42, 24)
+    .distinctUntilChanged()
+    .subscribe(
+      (x) => log(x, 'red'),
+      (err) => log(err, 'red'),
+      () => log('completed', 'red')
+    );
+
+
+
+  /* With key selector */
+  Rx.Observable.from([{value: 42}, {value: 42}, {value: 24}, {value: 24}])
+    .distinctUntilChanged(x => x.value)
+    .subscribe(
+      (x) => log(x, 'green'),
+      (err) => log(err, 'green'),
+      () => log('completed', 'green')
+    );
+
+
+
+  /* With comparer */
+  Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
+    .distinctUntilChanged(
+      x => x.value,
+      (a, b) => a !== b
+    )
+    .subscribe(
+      (x) => log(x, 'orange'),
+      (err) => log(err, 'orange'),
+      () => log('completed', 'orange')
+    );
+
+
+</script>
+
+</body>
+</html>

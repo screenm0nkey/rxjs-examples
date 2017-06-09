@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>takeUntil</h3>
+
+<p>The current observable will emit values until the provided observable emits a value., at which point it stops</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  //emit value every 1s
+  const source = Rx.Observable.interval(1000);
+  //is number even?
+  const isEven = val => val % 2 === 0;
+  //is greater than 5
+  const greaterThanFive = val => val > 5;
+
+  //only allow values that are even
+  const evenSource = source.filter(isEven);
+  //keep a running total of the number of even numbers out
+  const evenNumberCount = evenSource.scan((acc, _) => acc + 1, 0);
+  //do not emit until 5 even numbers have been emitted
+  const fiveEvenNumbers = evenNumberCount.filter(greaterThanFive);
+
+  const example = evenSource
+  //also give me the current even number count for display
+    .withLatestFrom(evenNumberCount)
+    .map(([val, count]) => `Even number (${count}) : ${val}`)
+    //when five even numbers have been emitted, complete source observable
+    .takeUntil(fiveEvenNumbers);
+
+  example.subscribe(val => log(val, 'red'));
+
+
+</script>
+
+</body>
+</html>

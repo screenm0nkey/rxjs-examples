@@ -16,17 +16,17 @@
 
   var subject = new Rx.ReplaySubject(null, 200); // Buffer size of 200ms
 
-  setTimeout(function () {
+  setTimeout(() => {
     subject.onNext('100ms'); //not logged
   }, 100);
-  setTimeout(function () {
+  setTimeout(() => {
     subject.onNext('200ms'); //not logged
   }, 200);
-  setTimeout(function () {
+  setTimeout(() => {
     subject.onNext('300ms'); //logged
   }, 300);
 
-  setTimeout(function () {
+  setTimeout(() => {
     subject.subscribe(function (n) {
       log(n, 'red');
     });

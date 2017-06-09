@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0">
+  http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0</a>
+<p>merge combines two Observables into one</p>
+<pre>Merge is similar to concat, but it will interleave
+  the emitted values instead of completing the first observable
+  before starting the second one.</pre>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  let red$ = Rx.Observable.timer(10, 500).map(function (r) {
+    return {source: 1, value: r, col:'red'};
+  }).take(4);
+
+  let green$ = Rx.Observable.timer(10, 500).map(function (r) {
+    return {source: 2, value: r, col:'green'};
+  }).take(4);
+
+  red$.merge(green$).subscribe(function (res) {
+    log(res, res.col)
+  });
+
+</script>
+
+</body>
+</html>
+
+

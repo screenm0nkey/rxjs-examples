@@ -12,20 +12,20 @@
   // as we can see but subscriptions are incrementing the value
   var obsCount = 0;
 
-  var increaseCount$ = Rx.Observable.interval(1000).do(function () {
+  var increaseCount$ = Rx.Observable.interval(1000).do(() => {
     ++obsCount;
   }).take(12);
 
   var timer$ = Rx.Observable
     .interval(1000)
-    .do(function () {
+    .do(() => {
       if (!obsCount) {
         ++obsCount;
         // we have to subscribe to start the observable
         increaseCount$.subscribe();
       }
     })
-    .map(function () {
+    .map(() => {
       return obsCount;
     }).take(10)
 
@@ -34,12 +34,12 @@
     return timer$;
   }
 
-  getObservable().subscribe(function (x) {
+  getObservable().subscribe((x)=> {
     log(x, 'red');
   });
 
-  setTimeout(function () {
-    getObservable().subscribe(function (x) {
+  setTimeout(() => {
+    getObservable().subscribe((x)=> {
       log(x, 'green');
     })
   }, 4000);
@@ -55,7 +55,7 @@
   function getSubject() {
     var observable = Rx.Observable
       .interval(1000)
-      .map(function () {
+      .map(() => {
         return ++subCount;
       });
 
@@ -66,12 +66,12 @@
     return subject;
   }
 
-  getSubject().subscribe(function (x) {
+  getSubject().subscribe((x)=> {
     log(x, 'gold');
   });
 
-  setTimeout(function () {
-    getSubject().subscribe(function (x) {
+  setTimeout(() => {
+    getSubject().subscribe((x)=> {
       log(x, 'blue');
     })
   }, 5000)

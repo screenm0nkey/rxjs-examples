@@ -11,25 +11,25 @@
 
   var subject = new Rx.BehaviorSubject(new Date().getTime());
 
-  subject.subscribe(function (x) {
+  subject.subscribe((x)=> {
     log(x, 'red');
   });
 
-  subject.subscribe(function (x) {
+  subject.subscribe((x)=> {
     log(x, 'green');
   });
 
   subject.onNext(new Date().getTime());
 
 
-  setTimeout(function () {
-    subject.subscribe(function (x) {
+  setTimeout(() => {
+    subject.subscribe((x)=> {
       log(x, 'blue');
     });
   }, 500);
 
-  setTimeout(function () {
-    subject.asObservable().subscribe(function (x) {
+  setTimeout(() => {
+    subject.asObservable().subscribe((x)=> {
       log(x, 'orange');
     });
   }, 1000);

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p>See how the scan stores the last value so when we emit a value after a delay, it still works</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  const subject = new Rx.Subject();
+  //scan example building an object over time
+  const example = subject.scan((acc, curr) => Object.assign({}, acc, curr), {});
+  //log accumulated values
+  example.subscribe(val => console.log('Accumulated object:', val));
+  //next values into subject, adding properties to object
+  subject.next({name: 'Joe'}); // {name: 'Joe'}
+  subject.next({age: 30}); // {name: 'Joe', age: 30}
+  subject.next({favoriteLanguage: 'JavaScript'}); // {name: 'Joe', age: 30, favoriteLanguage: 'JavaScript'}
+  setTimeout(()=>subject.next({favoriteCake: 'Carrot'}),2000);
+
+
+ Rx.Observable.interval(1000)
+    .scan((a,c) => a.concat(c), [])
+    .do(x=>log(x,'red'))
+    .map(r => r[Math.floor(Math.random()*r.length)])
+    .do(x=>log(x,'green'))
+    .distinctUntilChanged()
+    .subscribe(log);
+
+
+</script>
+
+</body>
+</html>
+
+

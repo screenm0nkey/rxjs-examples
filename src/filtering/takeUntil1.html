@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>takeUntil</h3>
+
+<p>The cuurent observable will emit values until the provided observable emits a value., at which point it stops</p>
+
+<input type="checkbox" id="toggle">
+<div id="display"></div>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const interval$ = Rx.Observable
+    .interval(50)
+    .map(_ => '.');
+
+  const change$ = Rx.Observable
+    .fromEvent(document.querySelector('#toggle'), 'change')
+    .map(e => e.target.checked);
+
+  change$
+    .filter(x => x === true)
+    .switchMap(() => interval$.takeUntil(change$))
+    .subscribe(x => document.querySelector('#display').innerText += x);
+
+</script>
+
+</body>
+</html>

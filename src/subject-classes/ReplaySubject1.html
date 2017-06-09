@@ -20,7 +20,7 @@
   repeat$.subscribe(subject$)
 
   subject$.subscribe(
-    function (x) {
+    (x)=> {
       log(x.toString(), 'green');
     },
     function (err) {
@@ -31,9 +31,9 @@
     });
 
 
-  setTimeout(function () {
+  setTimeout(() => {
     subject$.subscribe(
-      function (x) {
+      (x)=> {
         log(x.toString(), 'red');
       },
       function (err) {

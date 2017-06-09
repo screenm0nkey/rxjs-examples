@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h2>flatMap (same as map().mergeAll()) (mergeMap in rx5)</h2>
+<h3>flatMap is an alias for mergeMap</h3>
+<pre>
+  flattens an observable of observables by subscribing to the inner observable
+</pre>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  //without flatmap. logs the observable
+  Rx.Observable.interval(100)
+    .take(5)
+    .map(x => Rx.Observable.timer(500).map(() => x))
+    .subscribe(x => log(x, 'pink'));
+
+
+  Rx.Observable.interval(100)
+    .take(5)
+    .map(x => Rx.Observable.timer(500).map(() => x))
+    .mergeAll()
+    .subscribe(x => log(x.toString(), 'red'));
+
+  // same as flatmap below
+  Rx.Observable.interval(1000)
+    .take(5)
+    .mergeMap(x => Rx.Observable.timer(500).map(() => x))
+    .subscribe(x => log(x.toString(), 'orange'));
+
+  // same as mergemap above
+  Rx.Observable.interval(1000)
+    .take(5)
+    .flatMap(x => Rx.Observable.timer(500).map(() => x))
+    .subscribe(x => log(x.toString(), 'lime'));
+</script>
+
+</body>
+</html>
+
+

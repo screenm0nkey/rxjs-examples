@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h3>concat</h3>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+<pre>
+    Concat will combine two observables into a combined sequence,
+    but the second observable will not start emitting until the first one has completed.
+
+
+    Merge is similar to concat, but it will interleave the emitted values
+    instead of completing the first observable before starting the second one.
+    (see merge examples)
+</pre>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  let first = Rx.Observable.timer(10, 500).map(function (r) {
+    return {col: 'green', value: r};
+  }).take(4);
+
+  let second = Rx.Observable.timer(10, 500).map(function (r) {
+    return {col: 'red', value: r};
+  }).take(4);
+
+  first.concat(second).subscribe(function (res) {
+    log(res.value, res.col)
+  });
+
+</script>
+
+</body>
+</html>
+
+

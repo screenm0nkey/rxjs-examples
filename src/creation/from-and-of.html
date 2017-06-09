@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<a href="https://gist.github.com/btroncone/d6cf141d6f2c00dc6b35#concatmap">Example</a>
+<p><strong>from</strong> is for arrays. it used to be fromArray</p>
+<p><strong>of</strong> is for non-arrays</p>
+
+
+<h3 id="el1"></h3>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const {Observable} = Rx;
+  const el1 = document.getElementById('el1');
+
+  Observable.from(["Multiple", "values", "over", "time"])
+    .concatMap(message => Observable.of(message).delay(1000))
+    .repeat()
+    .do((x) => log(x, 'red'))
+    .subscribe(value => el1.innerText = value);
+
+
+
+
+</script>
+
+</body>
+</html>

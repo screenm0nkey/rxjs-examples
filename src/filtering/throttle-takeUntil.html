@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    #box {
+      width: 400px;
+      height: 400px;
+      background-color: aquamarine;
+      position: relative;
+      cursor: pointer;
+    }
+
+    #box > div {
+      height: 5px;
+      width: 5px;
+      position: absolute;
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+
+<pre>
+    hold mouse down over box and move cursor
+</pre>
+<div id="box" style="float: left;"></div>
+<pre id="pre"></pre>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/jquery.js"></script>
+<script>
+
+  const $box = $('#box');
+  const box = $box[0];
+  const pre = $('#pre')[0];
+
+  function addLittleSquare(evt) {
+    $('<div>').css({
+      top: evt.y,
+      left: evt.x
+    }).appendTo($box)
+  }
+
+  function updateTextArea(str) {
+    pre.innerText = str + '\n' + pre.innerText
+  }
+
+  function removeNullEvents(evt) {
+    return evt !== null
+  }
+
+  const mousemove$ = Rx.Observable.fromEvent(box, 'mousemove').throttleTime(200);
+  const mouseup$ = Rx.Observable.fromEvent(box, 'mouseup');
+  const mousedown$ = Rx.Observable.fromEvent(box, 'mousedown');
+
+  mousedown$
+    .switchMap(evt => mousemove$)
+    .do(addLittleSquare)
+    .filter(removeNullEvents)
+    .map(e => 'x' + e.x + '-y' + e.y)
+    .do(updateTextArea)
+    .takeUntil(mouseup$)
+    .repeat()
+    .subscribe(x=>log(x, 'green'))
+
+
+</script>
+
+</body>
+</html>
+
+

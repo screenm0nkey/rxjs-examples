@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<p><a href="https://github.com/ReactiveX/RxJava/wiki/Combining-observables" target="_blank">
+  https://github.com/ReactiveX/RxJava/wiki/Combining-observables</a>
+</p>
+<p>merge combines two Observables into one</p>
+<p>Merge is similar to concat, but it will interleave the emitted values instead of completing the first observable before starting the second one.</p>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+<p style="text-transform: uppercase; font-size: 14px; color: darkred">
+  Note that when the second observer subscribes after 2 seconds it gets the values from 0 even though the first
+  subscription is already on a count of 4. This is because the second subscription to obs$ is in fact going to
+  the $http observable.
+</p>
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  // imagine that http$ is an observable returned from an angular2 http request
+  // we could add a delay to all requests i.e. 2 seconds
+  const http$ = Rx.Observable.interval(500);
+
+  const obs$ = Rx.Observable
+    .merge(http$)
+    .do((val)=>log(val, 'green')) // this will log immediately)
+    .delay(2000);
+
+  // this will log after 2 seconds
+  // NOTE that
+  obs$.subscribe(val=>log(val, 'red'))
+
+
+</script>
+
+</body>
+</html>
+
+

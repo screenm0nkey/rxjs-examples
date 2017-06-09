@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+See here <a href="https://egghead.io/lessons/rxjs-aggregating-streams-with-reduce-and-scan-using-rxjs">Video</a>
+
+<h3>Scan and reduce</h3>
+<h3>Aggregate operators process a sequence and return a single value.</h3>
+
+<p>scan and reduce do the same thing except reduce will only emit the final value when the observable completes.</p>
+<p>Do not reduce if your observable never completes</p>
+<p><strong>scan</strong> is the same as reduce but it emits the reduced value every time it recieves a value</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+
+<script>
+  const initalValue = () => ({
+    sum: 0,
+    count: 0
+  });
+
+  const interval$ = Rx.Observable.interval(1000).take(5);
+  const range$ =   Rx.Observable.range(0, 5);
+
+  // reduce emits a value once it has received all the values in the stream
+  interval$.reduce((accumulator, value) => accumulator + value, 'reduce ')
+    .subscribe((result) => log(result, 'red'));
+
+  range$
+    .reduce((prev, cur) => ({
+      sum: prev.sum + cur,
+      count: prev.count + 1
+    }), initalValue())
+    .map(o => o.sum / o.count)
+    .subscribe(o => log('reduce average is: ' + o, 'orange'));
+
+
+
+  // scan emits a value every time it receives a value
+  interval$.scan((accumulator, value) => accumulator + value, 'scan ')
+    .subscribe((result) => log(result, 'green'));
+
+  range$
+    .scan((prev, cur) => ({
+      sum: prev.sum + cur,
+      count: prev.count + 1
+    }), initalValue())
+    .map(o => o.sum / o.count)
+    .subscribe(o => log('scan average is: ' + o, 'lime'));
+
+
+</script>
+
+</body>
+</html>

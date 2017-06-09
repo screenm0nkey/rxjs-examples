@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h1>bufferCount</h1>
+<p>Click three numbers and the total will show</p>
+<p>Notice the log shows twice as there are two subscriptions</p>
+
+<button value="1">1</button>
+<button value="2">2</button>
+<button value="3">3</button>
+<button value="5">5</button>
+<button value="10">10</button>
+
+<h3>Sub <span id="sub"></span></h3>
+<h3>Total<span id="total"></span></h3>
+
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  console.clear();
+  const subEl = document.getElementById('sub');
+  const clickStream$ = Rx.Observable.fromEvent(document.getElementsByTagName('button'), 'click');
+
+  const st$ = clickStream$
+    .do(() => document.getElementById('total').innerText = '')
+    .map(evt => parseInt(evt.target.value, 10))
+    .do(x => log(x, 'red'))
+    .bufferCount(3)
+    .do(x => log(x, 'green'))
+    .do(val => subEl.innerText = val.join('+'))
+    .map(val => val.reduce((curr, newVal) => curr + newVal, 0))
+    .do(x => log(x, 'gold'));
+
+
+  st$.delay(2000).subscribe(val => subEl.innerHTML = '');
+
+  st$.subscribe(val => document.getElementById('total').innerText = val);
+
+
+</script>
+
+</body>
+</html>

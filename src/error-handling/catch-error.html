@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Catch errors</h3>
+
+<p>
+  catch is useful for reacting to errors in a sequence, and it behaves much like the traditional try/catch block. In
+  some cases, though, it would be very conve- nient to ignore an error that happens with an item in the Observable and
+  let the sequence continue. In those cases, we can use the retry operator.
+</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const getJSON = (jsonArr) => Rx.Observable
+    .from(jsonArr)
+    .map((str) => JSON.parse(str));
+
+  const invalidJSON = ['{"1": 1, "2": 2}', '{"success: true}'];
+
+  // NOT USING CATCH()
+  getJSON(invalidJSON).subscribe(
+    (json) => log(json, 'green'),
+    (err) => log(err.message, 'red'), // this gets called as we didn't use catch() (below)
+    () => log('complete', 'pink') // this doesn't get invoked
+  );
+
+  log('--------\n\n', 'blue')
+
+  // USING CATCH() Notice it completes
+  getJSON(invalidJSON)
+    .catch(error => Rx.Observable.of(`Bad JSON: ${error}`)).subscribe(
+    (json) => log(json, 'green'), //invoked twice
+    (err) => log(err.message, 'red'), // not invoked
+    () => log('complete', 'pink')
+  );
+
+  log('--------\n\n', 'blue')
+
+  //create promise that immediately rejects
+  const myBadPromise = () => new Promise((resolve, reject) => reject('Rejected!'));
+  //emit single value after 1 second
+  const source = Rx.Observable.timer(1000);
+  //catch rejected promise, returning observable containing error message
+  const example = source.flatMap(() => Rx.Observable
+    .fromPromise(myBadPromise())
+    .catch(error => Rx.Observable.of(`Bad Prooomise: ${error}`))
+  );
+  //output: 'Bad Promise: Rejected'
+  const subscribe = example.subscribe(val => log(val, 'lime'));
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<a href="https://gist.github.com/btroncone/d6cf141d6f2c00dc6b35#concatmap">Example</a>
+<p><strong>from</strong> is for arrays. it used to be fromArray</p>
+<p><strong>of</strong> is for non-arrays</p>
+<h1>Look at the console</h1>
+<h3 id="el1" style="color:red;"></h3>
+<h3 id="el2" style="color:green;"></h3>
+<h3 id="el3" style="color:orange;"></h3>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const {Observable} = Rx;
+  const el1 = document.getElementById('el1');
+  const el2 = document.getElementById('el2');
+  const el3 = document.getElementById('el3');
+
+  const items$ = Observable.from(["Multiple", "values", "over", "time"])
+  const getMessage = message => Observable.of(message).delay(1000);
+
+  items$
+    .concatMap(getMessage)
+    .repeat()
+    .do((x) => log(x, 'red'))
+    .subscribe(value => el1.innerText = value);
+
+  items$
+    .flatMap(getMessage)
+    .repeat()
+    .do((x) => log(x, 'green'))
+    .subscribe(value => el2.innerText = value);
+
+  items$
+    .flatMap(getMessage)
+    .bufferCount(4)
+    .repeat()
+    .do((x) => log(x, 'orange'))
+    .subscribe(value => el3.innerText = value.join('\n'));
+
+
+</script>
+
+</body>
+</html>

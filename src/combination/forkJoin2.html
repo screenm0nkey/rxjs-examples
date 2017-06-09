@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>forkJoin</h3>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+<pre>
+    If we want to compare forkjoin to promises it would be similar to $q.all() from Angular 1.x
+
+    We use forkJoin to execute observables in parallel. One common use case of
+    this is making multiple http requests in parallel. In my sample I am
+    forkJoining two very simple observables, but the key point is that the
+
+    <strong>subscriber won't receive any values until both observables have completed</strong>.
+</pre>
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  // see syntax success who has used this
+  const source = Rx.Observable.forkJoin(
+    Rx.Observable.of(42).delay(3000),
+    Rx.Observable.range(0, 10), //9
+    Rx.Observable.from([1, 2, 3]), //3
+    Rx.Observable.fromPromise(fetch('/json/people.json').then((res) => res.json())),
+    fetch('/json/data.json').then((res) => res.json())
+  );
+
+  //NOTE THAT THERE IS NO OUTPUT UNTIL THE DELAY IS FINISHED.
+  source.subscribe(
+    (x) => log(x, 'red'),
+    (err) => log(err, 'red'),
+    () => log('Completed', 'green')
+  )
+
+</script>
+
+</body>
+</html>
+
+

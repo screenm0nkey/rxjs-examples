@@ -18,7 +18,7 @@
 <script src="/lib/rxjs/dist/rx.all.js"></script>
 <script>
   var observer = Rx.Observer.create(
-    function (x) {
+    (x)=> {
       log(x.val, x.col);
     },
     function (err) {
@@ -31,7 +31,7 @@
   var subject = new Rx.Subject();
 
   subject
-    .map(function (x) {
+    .map((x)=> {
       x.val += ' HELLO';
       return x;
     })

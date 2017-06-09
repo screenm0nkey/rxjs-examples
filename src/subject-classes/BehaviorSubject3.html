@@ -26,19 +26,19 @@
   var subSource$ = source$.subscribe(behaviorSubject$);
 
   // subscribe to the hot stream. it will get CATTTT initially
-  behaviorSubject$.subscribe(function (x) {
+  behaviorSubject$.subscribe((x)=> {
     log(x, 'green');
   });
 
   // subscribe to the hot stream at a later point it gets the last value from the stream
-  setTimeout(function () {
-    behaviorSubject$.subscribe(function (x) {
+  setTimeout(() => {
+    behaviorSubject$.subscribe((x)=> {
       log(x, 'orange');
     });
   }, 3000);
 
 
-  setTimeout(function () {
+  setTimeout(() => {
     behaviorSubject$.complete();
     subSource$.complete();
   }, 6000);

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>takeWHile</h3>
+
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  Rx.Observable.range(1, 20)
+    .takeWhile(x => x < 5)
+    .subscribe(
+      (x) => log('Next: ' + x),
+      (x) => log('Error: ' + x),
+      () => log('completed ' + x)
+    )
+
+
+</script>
+
+</body>
+</html>
+
+

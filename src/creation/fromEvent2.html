@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  const allMoves$ = Rx.Observable
+    .fromEvent(document, 'mousemove')
+    .throttleTime(300);
+
+  allMoves$.subscribe((e)=> log(e.clientX + ' ' + e.clientY, 'orange'));
+
+  const movesOnTheRigh = allMoves$.filter(e => e.clientX > window.innerWidth / 2);
+  const movesOnTheLeft = allMoves$.filter(e => e.clientX < window.innerWidth / 2);
+
+  movesOnTheRigh.subscribe(e => log(e.clientX, 'red'));
+  movesOnTheLeft.subscribe(e => log(e.clientX, 'green'));
+
+</script>
+
+</body>
+</html>
+
+

@@ -57,7 +57,7 @@
   );
 
   // Will receive the result immediately because it's cached
-  setTimeout(function () { //(6)
+  setTimeout(() => { //(6)
     products$.subscribe(
       function onNext(result) {
         console.log('Result 2:', result.response);

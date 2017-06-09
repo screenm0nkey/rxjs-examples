@@ -43,7 +43,7 @@
   subject$.onNext('Our message #1');
   subject$.onNext('Our message #2');
 
-  setTimeout(function () {
+  setTimeout(() => {
     subject$.onCompleted();
   }, 1000);
 

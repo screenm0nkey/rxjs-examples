@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  const sourceA = Rx.Observable.interval(300).map((x)=> ({val: x, col:'red'}));
+  const sourceB = Rx.Observable.interval(100).map((x)=> ({val: x, col:'green'}));
+  const sourceC = Rx.Observable.interval(500).map((x)=> ({val: x, col:'orange'}));
+
+  const subject = new Rx.Subject();
+
+  sourceA.subscribe(subject);
+  sourceB.subscribe(subject);
+  sourceC.subscribe(subject);
+
+  subject
+    .take(15)
+    .subscribe((result) => log(`${result.val}`, result.col));
+
+  // scan will emit the value each time. Reduce will only emit final reduced value
+
+  subject
+    .take(15)
+    .scan((accumulator, value)=> {
+      accumulator.currentVal = accumulator.newVal;
+      accumulator.newVal = accumulator.newVal + value.val;
+      accumulator.val = value.val;
+      accumulator.col = value.col;
+      return accumulator
+    }, {newVal:0, val: 0, col : 'purple'})
+    .subscribe((result) => log(`[new emitted value] ${result.val} + [currentVal] ${result.currentVal} = ${result.newVal}`, result.col));
+
+
+
+</script>
+
+</body>
+</html>
+
+

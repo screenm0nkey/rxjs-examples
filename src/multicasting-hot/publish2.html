@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Publish (make cold observable hot or rather warm)</h3>
+
+<p>Notice that connect() has to be called</p>
+
+<h1 id="count"></h1>
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  /*
+   The publish operator creates an ConnectableObservable which means it creates an Observable that shares one single
+   subscription to the underlying source. However, the publish operator doesn’t subscribe to the underlying source
+   just yet. It’s more like a gatekeeper that makes sure that subscriptions aren’t made to the underlying source but
+   to the ConnectableObservable instead.
+
+   It’s the job of the connect operator to actually cause the ConnectableObservable to subscribe to the underlying
+   source (the thing that produces values).
+   */
+
+  //even though we've published, nothing happens until we connect
+  var clock = Rx.Observable
+    .interval(1000)
+    .do((x)=> {
+      log(x, 'blue')
+    })
+    .take(10)
+    .map((x)=> {
+      return x + 1;
+    })
+    .startWith(50)
+    .publish();
+
+
+  log('subscribed', 'green');
+  clock.subscribe(function (i) {
+   log( i, 'green')
+  });
+
+  setTimeout(() => {
+    log('subscribed', 'red');
+    clock.subscribe(function (i) {
+      log(i, 'red')
+    });
+  }, 2000);
+
+  setTimeout(() => {
+    log('.connect()', 'orange');
+    clock.connect();
+  }, 3000);
+
+
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h2>flatMap (same as map().mergeAll()) (mergeMap in rx5)</h2>
+<h3>flatMap is an alias for mergeMap</h3>
+<p>from() converts an array to a rx collection</p>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const source = Rx.Observable
+    .range(3, 4)
+    .flatMap((x)=> {
+      return Rx.Observable.from([x + 'a', x + 'b', x + 'c']);
+    });
+
+  source.subscribe(
+    (x)=> {
+      console.log('Next: %s', x);
+    },
+    function (err) {
+      console.log('Error: %s', err);
+    },
+    function () {
+      console.log('Completed');
+    });
+
+  /*
+   Next: 3a
+   Next: 3b
+   Next: 4a
+   Next: 3c
+   Next: 4b
+   Next: 5a
+   Next: 4c
+   Next: 5b
+   Next: 6a
+   Next: 5c
+   Next: 6b
+   Next: 6c
+   Completed
+   * */
+
+</script>
+
+</body>
+</html>

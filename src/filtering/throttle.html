@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+Throttle will limit the amount of times the event is emitted. Below it limits it to emitting values every 300ms.
+Without throttle is will display a whole bunch of moves.
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  const allMoves$ = Rx.Observable
+    .fromEvent(document, 'mousemove')
+    .throttleTime(100);
+
+  allMoves$.subscribe((e)=> log(e.clientX + ' ' + e.clientY, 'orange'));
+
+  const movesOnTheRigh = allMoves$.filter(e => e.clientX > window.innerWidth / 2);
+  const movesOnTheLeft = allMoves$.filter(e => e.clientX < window.innerWidth / 2);
+
+  movesOnTheRigh.subscribe(e => log(e.clientX, 'red'));
+  movesOnTheLeft.subscribe(e => log(e.clientX, 'green'));
+
+
+</script>
+
+</body>
+</html>
+
+

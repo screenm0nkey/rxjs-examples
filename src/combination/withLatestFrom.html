@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<p>Notice the wait of 3 seconds for a value from source 2</p>
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  //emit every 5s
+  const source = Rx.Observable.interval(3000);
+  //emit every 1s
+  const secondSource = Rx.Observable.interval(1000)
+  //withLatestFrom slower than source
+  const example = secondSource
+  //both sources must emit at least 1 value (5s) before emitting
+    .withLatestFrom(source)
+    .map(([first, second]) =>({
+      s1 : `Source 1 = ${first}`,
+      s2 : `Source 2 = ${second}`
+    }));
+
+  example.subscribe(val => {
+    log(val.s1, 'red');
+    log(val.s2, 'green');
+  });
+
+</script>
+
+</body>
+</html>
+
+

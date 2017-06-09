@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h3>buffering</h3>
+
+<p>
+  Collect all values emitted by our interval$ observable until we click document.
+  This will cause the click$ Observable to emit a value, satisfying the buffer.
+  Pass us all collected values since last buffer as an array.
+</p>
+
+<button id="clickMe">Click Me</button>
+
+<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script>
+  var btn = document.querySelector('#clickMe');
+
+  //Create an observable that emits a value every second
+  const interval$ = Rx.Observable.interval(300);
+
+  //Create an observable that emits every time document is clicked
+  const click$ = Rx.Observable.fromEvent(btn, 'click');
+
+  /*
+   Collect all values emitted by our interval observable until we click document.
+   This will cause the click$ Observable to emit a value, satisfying the buffer.
+   Pass us all collected values since last buffer as an array.
+   */
+  const bufferedInterval$ = interval$.buffer(click$);
+  //Print values to console
+  //ex. output: [1,2,3] ... [4,5,6,7,8]
+  bufferedInterval$.subscribe(function (val) {
+    console.log(' Buffered Values:', val)
+  });
+
+
+</script>
+
+</body>
+</html>

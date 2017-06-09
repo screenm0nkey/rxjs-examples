@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+
+<h2>flatMap (same as map().mergeAll()) (mergeMap in rx5)</h2>
+<h3>flatMap is an alias for mergeMap</h3>
+
+<p><a href="https://egghead.io/lessons/rxjs-rxjs-map-vs-flatmap" target="_blank">map-vs-flatmap to video on egghead</a>
+</p>
+
+<h4>flatmap() </h4>
+
+<pre>
+    what flatmap does is subscribe the the observables in the
+    original observable stream and returns their values.
+
+    It outputs all the values but the output is not in order i.e. it doesn't just output
+    everything from the first collection, then the next and so on.
+
+    See <strong>flatMapLatest</strong> example.
+</pre>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+
+  // it you replace flatmap for map you will just get objects
+  Rx.Observable
+    .interval(100)
+    .take(10)
+    .flatMap((x) => Rx.Observable.timer(1500))
+    .subscribe((x) => log('flatMap ' + x, 'red'));
+
+  // does same as above but with map.mergeAll()
+  Rx.Observable
+    .interval(100)
+    .take(10)
+    .map((x) => Rx.Observable.timer(1500))
+    .do((x) => {
+      // at this point x is an observable. mergeAll will subscribe to each observable and return the value
+      console.log(x + '')
+    })
+    .mergeAll()
+    .subscribe((x) => log('mergeAll ' + x, 'green'));
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<button id="btn">Clickme</button>
+
+<script src="/lib/Rx5.umd.js"></script>
+<script>
+  const click$ = Rx.Observable.fromEvent(document.getElementById('btn'), 'click');
+  let initialState='';
+
+  click$
+    .bufferCount(5)
+    .scan((accumulator, arr) => arr.map(e=>`x:${e.x},y:${e.y}`).join(','), initialState)
+    .subscribe(x=>log(x,'red'));
+
+  click$
+    .map(e => ({x: e.x, y: e.y}))
+    .subscribe(x=>log(x,'green'));
+
+
+</script>
+
+</body>
+</html>
+
+
