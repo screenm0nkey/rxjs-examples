@@ -156,3 +156,42 @@ const $rxUtils = (rx: any) => {
 };
 
 angular.module('myModule').factory('$rx', ['rx', $rxUtils]);
+			
+			
+			domInputs = rx.fromEvent(element, 'mousedown')
+			.flatMapLatest(({ pageX: x, pageY: y }) => rx
+				.fromEvent($document, 'mousemove')
+				.map(({ pageX, pageY }) => ({x: pageX, y: pageY}))
+				.filter(position => draggableService.getDistanceBetween(position, {x, y}) > 10)
+				.sample(25)
+				.merge(rx
+					.timer(500)
+					.map(() => ({x,y})))
+				.takeUntil(rx.fromEvent($document, 'mouseup'))
+				.take(1))
+			.do(onDragStart)
+			.flatMapLatest(() => rx
+				.fromEvent($document, 'mousemove')
+				.takeUntil(rx.fromEvent($document, 'mouseup'))
+				.finally(onDragEnd))
+			.map(({ pageX, pageY }) => ({x: pageX, y: pageY}))
+			.throttle(40)
+			.do(onDrag)
+			.subscribe();
+
+		function onDragStart({ x, y }:  Draggable.Coord) {
+			element.addClass('drag-active');
+			ctrl.onDragStart(element);
+			onDrag({x,y});
+		}
+
+		function onDrag({ x, y }: Draggable.Coord) {
+			let { x: left, y: top} = draggableService.getOffsetPosition({x,y}, {height: elHeight, width: elWidth});
+			element.css({left, top});
+			ctrl.onDrag({x,y});
+		}
+
+		function onDragEnd() {
+			element.removeClass('drag-active').css({left: initX || 0, top: initY || 0});
+			ctrl.onDragEnd(element, attrs.spgDraggable, scope.$eval(attrs.draggablePayload));
+		}
