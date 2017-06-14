@@ -195,3 +195,46 @@ angular.module('myModule').factory('$rx', ['rx', $rxUtils]);
 			element.removeClass('drag-active').css({left: initX || 0, top: initY || 0});
 			ctrl.onDragEnd(element, attrs.spgDraggable, scope.$eval(attrs.draggablePayload));
 		}
+			
+			
+			
+			
+			
+			
+			
+			interface SpgDraggableService {
+	$PLACEHOLDER: JQuery,
+	SELECTOR: string,
+	getClosestPosition(targetPosition: Draggable.Coord, positions: Map<Draggable.Coord, any>): Draggable.Coord;
+	getCenterPosition(position: Draggable.Coord, dimensions: Draggable.Size): Draggable.Coord;
+	getOffsetPosition(position: Draggable.Coord, dimensions: Draggable.Size): Draggable.Coord;
+	getDistanceBetween(pointA: Draggable.Coord, pointB: Draggable.Coord): Number;
+}
+
+const DraggableServiceFactory = () => Object.freeze({
+	$PLACEHOLDER: angular.element('<div class="spg-draggable-placeholder"></div>'),
+	SELECTOR: '[spg-draggable]',
+
+	getClosestPosition(target: Draggable.Coord, positions: Map<Draggable.Coord, any>): Draggable.Coord {
+		let hash = Object.create(null);
+		positions.forEach((element, position) => {
+			hash[this.getDistanceBetween(target, position)] = position;
+		});
+
+		return hash[Math.min(...Object.keys(hash).map(distance => +distance))];
+	},
+
+	getCenterPosition({ x, y }: Draggable.Coord, { height, width }: Draggable.Size): Draggable.Coord {
+		return ({x: x + width/2, y: y + height/2});
+	},
+
+	getOffsetPosition({ x, y }: Draggable.Coord, { height, width }: Draggable.Size): Draggable.Coord {
+		return ({x: x - width/2, y: y - height/2});
+	},
+
+	getDistanceBetween(pointA: Draggable.Coord, pointB: Draggable.Coord): Number {
+		return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2));
+	},
+});
+
+angular.module('munisSalesLink').factory('spgDraggableService', DraggableServiceFactory);
