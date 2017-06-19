@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="/lib/Rx5.js"></script>
+</head>
+<body>
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="reset">Reset</button>
+
+<script>
+  const Observable = Rx.Observable;
+
+  const startButton = document.querySelector('#start');
+  const stopButton = document.querySelector('#stop');
+  const resetButton = document.querySelector('#reset');
+
+  const startButtonClick$ = Observable.fromEvent(startButton, 'click');
+  const interval$ = Observable.interval(500);
+  const stopButtonClick$ = Observable.fromEvent(stopButton, 'click');
+  const resetButtonClick$ = Observable.fromEvent(resetButton, 'click');
+
+  const data = {count: 0};
+  const inc = acc => ({count: acc.count + 1});
+  const reset = _ => data;
+
+  const intervalThatStops$ = interval$
+    .takeUntil(stopButtonClick$);
+
+  const incOrReset$ = Observable.merge(
+    intervalThatStops$.mapTo(inc), // startButton click sends the inc() func
+    resetButtonClick$.mapTo(reset) // resetButton click sends the reset() func
+  );
+
+  let $scan = startButtonClick$
+    .switchMapTo(incOrReset$)
+    .startWith(data)
+    .scan((acc, curr) => curr(acc)); // curr will be either inc() or reset();
+
+  $scan.subscribe((x) => {
+    console.log(x)
+  });
+
+</script>
+</body>
+</html>

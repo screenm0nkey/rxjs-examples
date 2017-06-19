@@ -16,7 +16,7 @@
   subscription is already on a count of 4. This is because the second subscription to obs$ is in fact going to
   the $http observable.
 </p>
-<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/Rx5.js"></script>
 <script>
 
   // imagine that http$ is an observable returned from an angular2 http request
@@ -29,7 +29,7 @@
     .delay(2000);
 
   // this will log after 2 seconds
-  // NOTE that
+  // NOTE that the second subscription will start from 0
   obs$.subscribe(val=>log(val, 'red'))
 
 

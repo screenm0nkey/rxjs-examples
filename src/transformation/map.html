@@ -3,18 +3,16 @@
 <head></head>
 <body>
 
-<script src="/lib/rxjs/dist/rx.all.js"></script>
+<script src="/lib/Rx4.js"></script>
 <script src="/lib/rxjs-dom/dist/rx.dom.js"></script>
 <script>
   // observ$ is of type AjaxObservable
   var observ$ = Rx.DOM.get('/package.json');
 
-  observ$.map(function (val) {
-    var package = JSON.parse(val.response);
-    return {
-      name: package.name
-    }
-  }).subscribe(
+  observ$.map(val => ({
+    name: JSON.parse(val.response).name
+  }))
+  .subscribe(
     function onNext(data) {
       console.log(data);
     }, function onError(err) {

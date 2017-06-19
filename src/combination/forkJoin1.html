@@ -7,21 +7,24 @@
     Combining Multiple RxJs Streams In Angular
 </a>
 <pre>
-    If we want to compare forkjoin to promises it would be similar to $q.all() from Angular 1.x
+    If we want to compare forkjoin to promises it would be similar to $q.all()
 
     We use forkJoin to execute observables in parallel. One common use case of
-    this is making multiple http requests in parallel. In my sample I am
+    this is making multiple http requests in parallel. In the example I am
     forkJoining two very simple observables, but the key point is that the
     <strong>subscriber won't receive any values until both observables have completed</strong>.
 </pre>
 
-<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/Rx5.js"></script>
 <script>
   let first = Rx.Observable.of({source: 1, value: 1, col: 'red'}).delay(1000);
   let second = Rx.Observable.of({source: 2, value: 1, col: 'green'});
+  const fetch = Rx.Observable.fromPromise(window.fetch('/json/people.json').then((res) => res.json()));
 
-  Rx.Observable.forkJoin(first, second).subscribe(function (res) {
-    log(res[0], res[1])
+  Rx.Observable.forkJoin(first, second, fetch).subscribe(function (res) {
+    log(res[0], 'red');
+    log(res[1], 'green');
+    log(res[2], 'orange');
   });
 </script>
 

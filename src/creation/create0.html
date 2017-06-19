@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  const click$ = Rx.Observable.create(
+    //subscribe function
+    (observer) => {
+      log('Subscribed', 'pink');
+      const listener = (ev) => observer.next(ev);
+      document.addEventListener('click', listener);
+      // return unsubscribe function
+      return () => {
+        log('Unsubscribed', 'red');
+        document.removeEventListener('click', listener)
+      };
+    });
+
+  const subscription = click$.subscribe(({clientX}) => log(clientX, 'lime'));
+
+  setTimeout(() => subscription.unsubscribe(), 4000);
+
+</script>
+
+</body>
+</html>
+

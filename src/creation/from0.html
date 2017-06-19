@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>From</title></head>
+<body>
+
+<a href="https://egghead.io/lessons/rxjs-convert-an-underlying-source-of-data-into-an-observable">Link</a>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+
+  // 1. Identify
+  // 2. Convert to Observables
+  // 3. Compose
+
+  const click$ = Rx.Observable
+    .fromEvent(document, 'click');
+
+  const res$ = Rx.Observable.fromPromise(
+    fetch('https://jsonplaceholder.typicode.com/users/1')
+      .then(res => res.json())
+  );
+
+  const count$ = Rx.Observable.merge(click$, res$)
+    .do(x=>log(x,'lime'))
+    .map(() => 1)
+    .scan((acc, x) => acc + x, 0);
+
+  count$.subscribe(function (x) {
+    console.log(x);
+  });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>pairwise</title>
+  <script src="/lib/Rx5.js"></script>
+</head>
+<body>
+<h1>Pairwise</h1>
+<p>Emit the previous and current values as an array.</p>
+
+<script>
+  let interval = Rx.Observable.interval(1000);
+
+  //Returns: [0,1], [1,2], [2,3], [3,4], [4,5]
+  interval.pairwise()
+    .take(5)
+    .subscribe(console.log);
+
+</script>
+</body>
+</html>

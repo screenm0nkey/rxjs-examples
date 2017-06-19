@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<a href="https://egghead.io/lessons/rxjs-make-observables-hot-only-where-necessary">Link</a>
+<h3>share() considered a warm observable as it only publishes on at least one subscription</h3>
+<pre>
+  Operators like publish(), refCount(), share() make it easy to convert a cold Observable to a hot one,
+  and are often necessary to get some feature done. In this lesson we will learn when exactly
+  do we need to convert to hot, and when can we leave the Observable cold.
+</pre>
+
+<script src="/lib/Rx4.js"></script>
+<script>
+  const clock$ = Rx.Observable.interval(500).share().take(6);
+
+  const randomNum$ = clock$
+    .map(i => Math.random() * 100).share();
+
+  const smallNum$ = randomNum$
+    .filter(x => x <= 50)
+    .toArray();
+
+  const largeNum$ = randomNum$
+    .filter(x => x > 50)
+    .toArray();
+
+  randomNum$.subscribe(x => log('random: ' + x, 'red'));
+  smallNum$.subscribe(x => log('small:' + x, 'green' ));
+  largeNum$.subscribe(x => log('large:' + x, 'orange'));
+
+</script>
+</body>
+</html>

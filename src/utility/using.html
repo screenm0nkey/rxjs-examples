@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Using</title></head>
+<body>
+
+<h1></h1>
+
+<script src="/lib/Rx4.js"></script>
+<script>
+  /* Using an AsyncSubject as a resource which supports the .dispose method */
+  class DisposableResource {
+    constructor(value) {
+      this.value = value;
+    }
+
+    getValue() {
+      log(this.value, 'lime');
+      return this.value;
+    }
+
+    dispose() {
+      log('Disposed', 'orange');
+    };
+  }
+
+  // the source$ is the 'subject' Observable returned from the Rx.AsyncSubject()
+  const source$ = Rx.Observable.using(
+    () => new DisposableResource(55),
+    (disposableResource) => {
+      const subject = new Rx.AsyncSubject();
+      subject.onNext(disposableResource.getValue());
+      subject.onCompleted();
+      return subject;
+    }
+  );
+
+  const subscription = source$.subscribe(
+    (x) => log(x, 'red'),
+    () => log('Error', 'red'),
+    () => log('Completed', 'red'),
+  );
+
+  subscription.dispose();
+
+  // => Disposed
+</script>
+
+</body>
+</html>
+
+

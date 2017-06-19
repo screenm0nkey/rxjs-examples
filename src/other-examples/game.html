@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <script src="/lib/Rx4.js"></script>
+  <script src="/lib/rxjs-dom/dist/rx.dom.js"></script>
+  <title>Game</title>
+</head>
+<body>
+
+
+<script>
+  const SPEED = 30;
+  const STAR_NUMBER = 250;
+  const STAR_SIZE = 3;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext("2d");
+  document.body.appendChild(canvas);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const HERO_Y = canvas.height - 30;
+
+  const createStar = () => ({
+    x: parseInt(Math.random() * canvas.width),
+    y: parseInt(Math.random() * canvas.height),
+    size: Math.random() * STAR_SIZE + 1
+  });
+
+  const paintStars = stars => {
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ffffff';
+    stars.forEach(function (star) {
+      ctx.fillRect(star.x, star.y, star.size, star.size);
+    });
+  };
+
+  // the single starArray will become a single Observable which broadcasts every
+  // SPEED milliseconds an array of star objects, who's x/y values have been updated
+  const positionStar$ = starArray =>
+    Rx.Observable.interval(SPEED)
+      .map(() => {
+        starArray.forEach(star => {
+          if (star.y >= canvas.height) {
+            star.y = 0; // Reset star to top of the screen
+          }
+          star.y += 3; // Move star
+        });
+        return starArray;
+      });
+
+  function drawTriangle(x, y, width, color, direction) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x - width, y);
+    ctx.lineTo(x, direction === 'up' ? y - width : y + width);
+    ctx.lineTo(x + width, y);
+    ctx.lineTo(x - width, y);
+    ctx.fill();
+  }
+
+  const createSpaceShip = (x, y) => drawTriangle(x, y, 20, '#ff0000', 'up');
+
+  const starStream$ = Rx.Observable
+    .range(1, STAR_NUMBER)
+    .map(createStar)
+    .toArray()
+    .map(positionStar$)
+    .do(x => console.log(x)) // is now singleObservable
+    .mergeAll(); //flatMap same as map().mergeAll()
+
+  const mousemove$ = Rx.Observable
+    .fromEvent(canvas, 'mousemove');
+
+  const spaceShipStream$ = mousemove$
+    .map(event => ({x: event.clientX, y: HERO_Y}))
+    .startWith({x: canvas.width / 2, y: HERO_Y});
+
+
+  const game$ = Rx.Observable
+    .combineLatest(
+      starStream$,
+      spaceShipStream$,
+      (stars, spaceship) => ({
+        stars: stars,
+        spaceship: spaceship
+      }));
+
+  game$
+    .do(x => log(JSON.stringify(x.spaceship), 'red'))
+    .subscribe(actors => {
+      paintStars(actors.stars);
+      createSpaceShip(actors.spaceship.x, actors.spaceship.y);
+    });
+
+
+</script>
+</body>
+</html>

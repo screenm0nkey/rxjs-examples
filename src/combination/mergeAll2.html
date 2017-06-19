@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>mergeAll with promises</h3>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  const myPromise = val => new Promise(resolve => setTimeout(() => resolve(`Result: ${val}`), 2000))
+  //emit 1,2,3
+  const source = Rx.Observable.of(1, 2, 3);
+
+  const example = source
+  //map each value to promise
+    .map(val => myPromise(val))
+    //emit result from source
+    .mergeAll();
+  /*
+   output:
+   "Result: 1"
+   "Result: 2"
+   "Result: 3"
+   */
+  example.subscribe(val => log(val, 'red'));
+
+
+
+</script>
+
+</body>
+</html>

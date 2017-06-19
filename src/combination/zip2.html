@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>zip</title>
+</head>
+<body>
+<h3>zip</h3>
+<pre>
+    TL;DR: After all observables emit, emit values as an array
+
+    The zip operator will subscribe to all inner observables,
+    waiting for each to emit a value.
+    Once this occurs, all values with the corresponding index will be emitted.
+    This will continue until at least one inner observable completes.
+</pre>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  const sourceOne = Rx.Observable.of('Hello');
+  const sourceTwo = Rx.Observable.of('World!');
+  const sourceThree = Rx.Observable.of('Goodbye');
+  const sourceFour = Rx.Observable.of('World!');
+  //wait until all observables have emitted a value then emit all as an array
+  const example = Rx.Observable
+    .zip(
+      sourceOne,
+      sourceTwo.delay(1000),
+      sourceThree.delay(2000),
+      sourceFour.delay(3000)
+    );
+  //output: ["Hello", "World!", "Goodbye", "World!"]
+  const subscribe = example.subscribe(val => log(val, 'red'));
+
+
+  //emit every 1s
+  const interval = Rx.Observable.interval(1000);
+  //when one observable completes no more values will be emitted
+  const example2 = Rx.Observable.zip(interval, interval.take(2));
+  //output: [0,0]...[1,1]...
+  example2.subscribe(val => log(val, 'green'));
+
+</script>
+
+</body>
+</html>
+
+

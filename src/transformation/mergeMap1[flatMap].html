@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h2>mergeMap (same as map().mergeAll()) (flatMap in rx4)</h2>
+
+<p>If only one inner subscription should be active at a time, try <strong>switchMap</strong>!</p>
+<p>If the order of emission and subscription of inner observables is important, try <strong>concatMap</strong>!</p>
+
+<script src="/lib/Rx5.js"></script>
+
+<script>
+  const source = Rx.Observable.of('Hello');
+  const myPromise = val => new Promise(resolve => resolve(`${val} World From Promise!`));
+
+
+
+  //map to inner observable and flatten
+  const example1 = source.mergeMap(val => Rx.Observable.of(`${val} World!`));
+  //output: 'Hello World!'
+  example1.subscribe(val => log(val, 'green'));
+
+
+
+  //emit 'Hello'
+  //mergeMap also emits result of promise
+  //map to promise and emit result
+  const example2 = source.mergeMap(val => myPromise(val));
+  //output: 'Hello World From Promise'
+  example2.subscribe(val => log(val, 'red'));
+
+
+  /*
+   you can also supply a second argument which receives the source value and emitted
+   value of inner observable or promise
+   */
+  //emit 'Hello'
+  //mergeMap also emits result of promise
+  const example3 = source
+    .mergeMap(val => myPromise(val),
+      (valueFromSource, valueFromPromise) => {
+        return `Source: ${valueFromSource}, Promise: ${valueFromPromise}`;
+      });
+  //output: "Source: Hello, Promise: Hello World From Promise!"
+  example3.subscribe(val => log(val, 'orange'));
+
+
+
+  //emit value every 1s
+  const interval = Rx.Observable.interval(1000);
+  const example4 = interval.mergeMap(
+    val => Rx.Observable.interval(5000).take(2),
+    (oVal, iVal, oIndex, iIndex) => [oIndex, oVal, iIndex, iVal], 2
+  );
+  /*
+   Output:
+   [0, 0, 0, 0] <--1st inner observable
+   [1, 1, 0, 0] <--2nd inner observable
+   [0, 0, 1, 1] <--1st inner observable
+   [1, 1, 1, 1] <--2nd inner observable
+   [2, 2, 0, 0] <--3rd inner observable
+   [3, 3, 0, 0] <--4th inner observable
+   */
+ example4.subscribe(val => log(val, 'lime'));
+
+
+
+</script>
+
+</body>
+</html>
+
+

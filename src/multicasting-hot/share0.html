@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h3>share() considered a warm observable as it only publishes on at least one subscription</h3>
+<pre>
+  Share creates a hot observable. It's a shortcut for .publish().refCount()
+
+  Returns an observable sequence that shares a single subscription to the underlying sequence. This operator is a
+  specialization of publish which creates a subscription when the number of observers goes from zero to one, then
+  shares that subscription with all subsequent observers until the number of observers returns to zero, at which point
+  the subscription is disposed. (see .publish().refCount())
+</pre>
+
+<script src="/lib/Rx4.js"></script>
+<script>
+  var interval2$ = Rx.Observable.interval(500);
+
+  var source2$ = interval2$
+    .take(20)
+          .do((x)=> {
+      log(x, 'pink');
+    });
+
+  var published$ = source2$.share();
+
+  // When the number of observers subscribed to published observable goes from
+  // 0 to 1, we connect to the underlying observable sequence.
+  var autoDetachObserver1 = published$.subscribe(createObserverB('SourceE', 'red'));
+  // When the second subscriber is added, no additional subscriptions are added to the
+  // underlying observable sequence. As a result the operations that result in side
+  // effects are not repeated per subscriber.
+  var autoDetachObserver2;
+  setTimeout(() => {
+    autoDetachObserver2 = published$.subscribe(createObserverB('SourceD', 'green'));
+  }, 3000);
+
+  // as soon as these are dispose() the stream is stopped
+  setTimeout(() => {
+    autoDetachObserver1.dispose();
+    autoDetachObserver2.dispose();
+    log('No more subscriptions', 'pink');
+  }, 6000);
+
+
+  function createObserverB(tag, col) {
+    return Rx.Observer.create(
+      (x)=> {
+        log(x  + tag, col);
+      },
+      function (err) {
+        log('Error: ' + err);
+      },
+      function () {
+        log('Completed' + tag, col);
+      }
+    );
+  }
+
+</script>
+</body>
+</html>

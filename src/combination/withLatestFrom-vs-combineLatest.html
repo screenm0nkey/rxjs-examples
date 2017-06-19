@@ -20,7 +20,7 @@
 <button id="but">Click me</button>
 
 <script src="/lib/angular.js"></script>
-<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/Rx5.js"></script>
 <script>
   const click$ = Rx.Observable.fromEvent(document.getElementById('but'), 'click');//.startWith({target:'START'});
   const interval$ = Rx.Observable

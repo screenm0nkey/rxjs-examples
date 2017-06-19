@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<pre>
+    Notice how it only calculates the values first set of values i.e 5x7x2.
+    This is becuase zip has to wait for values from all three streams before
+    it calculates the next value i.e. "Rx.Observable.of(2)" needs a second value.
+   see the combineLatest example which is similar to zip but will produce a second value
+</pre>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+
+  const length$ = Rx.Observable.of(5, 10);
+  const width$ = Rx.Observable.of(7, 6);
+  const height$ = Rx.Observable.of(2);
+
+  const volume$ = Rx.Observable
+    .zip(length$, width$, height$,
+      (length, width, height) => length * width * height
+    );
+
+  volume$.subscribe(function (volume) {
+    console.log(volume); //70
+  });
+
+
+</script>
+
+</body>
+</html>
+
+

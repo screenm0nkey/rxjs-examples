@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Sample</title></head>
+<body>
+<h1>Sample</h1>
+
+<p>Sample does the same as throttle but throttle take a numeric value whereas sample takes another Observable</p>
+<script src="/lib/Rx5.js"></script>
+<script>
+  //emit value every 1s
+  const source1 = Rx.Observable.interval(1000);
+  //sample last emitted value from source every 2s
+  const example1 = source1.sample(Rx.Observable.interval(2000));
+  //output: 2..4..6..8..
+  example1.subscribe(val => log(val,'red'));
+
+
+  const source2 = Rx.Observable.zip(
+    //emit 'Joe', 'Frank' and 'Bob' in sequence
+    Rx.Observable.from(['Joe', 'Frank', 'Bob']),
+    //emit value every 2s
+    Rx.Observable.interval(2000)
+  );
+  //sample last emitted value from source every 2.5s
+  const example2 = source2.sample(Rx.Observable.interval(2500));
+  //output: ["Joe", 0]...["Frank", 1]...........
+  example2.subscribe(val => log(val, 'green', {a:1}));
+
+
+</script>
+
+</body>
+</html>
+

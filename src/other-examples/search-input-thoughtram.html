@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<input type="text" id="search" placeholder="Search Wiki" autofocus="true">
+
+<pre id="result"></pre>
+
+<script src="/lib/Rx5.js"></script>
+<script src="/lib/fetch-jsonp.js"></script>
+<script>
+  const URL = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&list=search&search=';
+  const searchEl = document.getElementById('search');
+  const resultEl = document.getElementById('result');
+
+  const mapValues = (res) => {
+    const arr = res[1] || [];
+    return arr.map((item, i) => ({
+      title: item,
+      desc: res[2][i],
+      url: res[3][i]
+    }));
+  };
+
+  const search = (term = '') => {
+    log(term, 'green')
+    const promise = fetchJsonp(URL + term)
+      .then(res => res.json())
+      .then(mapValues);
+    return Rx.Observable.fromPromise(promise);
+  };
+
+
+  const keyup$ = Rx.Observable
+    .fromEvent(searchEl, 'keyup')
+    .map(e => e.target.value)
+    .debounceTime(400)
+    .distinctUntilChanged()
+    .switchMap(search);
+
+  keyup$.subscribe(val => resultEl.innerText = JSON.stringify(val, null, 2))
+
+
+</script>
+
+</body>
+</html>
+
+

@@ -8,18 +8,18 @@
 </a></p>
 <p>merge combines two Observables into one</p>
 
-<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/Rx5.js"></script>
 <script>
 
   const red$ = Rx.Observable
     .interval(300)
     .delay(1000)
-    .take(5)
+    .take(10)
     .map(x=>({x:x, col: 'red'}));
 
   const green$ = Rx.Observable
-    .interval(1000)
-    .take(3)
+    .interval(500)
+    .take(15)
     .map(x=>({x:x, col: 'green'}));
 
   const orange$ = Rx.Observable

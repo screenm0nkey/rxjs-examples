@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Using</title></head>
+<body>
+<h4>Using</h4>
+
+<script src="/lib/jquery.js"></script>
+<script src="/lib/Rx4.js"></script>
+<script>
+  const $document = $(document);
+
+  const dispose = () => {
+    log('Dispose', 'lime');
+  };
+
+  const source = Rx.Observable
+    .fromEvent($document, 'mousemove')
+    .map(({pageX, pageY}) => ({x: pageX, y: pageY}))
+    .throttle(200) // limit the emits to one every 200ms
+    .takeUntil(Rx.Observable.using(
+      () => ({dispose}),
+      () => Rx.Observable.fromEvent($document, 'click')
+    ));
+
+  source.subscribe(
+    (x) => log(x, 'red'),
+    () => log('Error', 'red'),
+    () => log('Completed', 'red'),
+  );
+
+</script>
+
+</body>
+</html>
+
+

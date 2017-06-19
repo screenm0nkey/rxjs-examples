@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<a href="http://javascript.tutorialhorizon.com/2017/03/29/switchmap-vs-flatmap-rxjs/" target="_blank">Example</a>
+
+<button id="butt">Click Me a lot</button>
+
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  const click$ = Rx.Observable.fromEvent(document.getElementById('butt'), 'click');
+
+  // notice how this does not cancel the previous stream but creates a new connection
+  click$
+    .mergeMap(ev => Rx.Observable.interval(500)) //flatmap
+    .subscribe(x => log(x, 'green'));
+
+  // notice how this cancels the previous stream, so there is only one steam outputting vlaues
+  click$
+    .switchMap(ev => Rx.Observable.interval(500))
+    .subscribe(x => log(x, 'red'));
+</script>
+</body>
+</html>
+
+

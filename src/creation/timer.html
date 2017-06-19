@@ -4,26 +4,21 @@
 <body>
 
 
-<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/Rx5.js"></script>
 <script>
 
   console.log('Current time: ' + Date.now());
 
-  var source = Rx.Observable.timer(
-    5000, /* wait 5 seconds */
+  Rx.Observable.timer(
+    3000, /* wait 3 seconds */
     2000 /* then emit value every 2 second */
-  );
+  ).subscribe(x => log(x, 'orange'));
 
 
-  var subscription = source.subscribe((x)=> {
-      log(x, 'orange');
-    });
+  //emit 0 after 1 second then complete, since no second argument is supplied
+  Rx.Observable.timer(1000)
+  .subscribe(val => log(val, 'red'));
 
-  /* Output may be similar to this */
-  // Current time: 1382560697820
-  // 0: 1382560702820
-  // 1: 1382560703820
-  // 2: 1382560704820
 
 
 </script>

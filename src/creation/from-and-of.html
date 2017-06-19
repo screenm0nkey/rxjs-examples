@@ -3,13 +3,13 @@
 <head></head>
 <body>
 <a href="https://gist.github.com/btroncone/d6cf141d6f2c00dc6b35#concatmap">Example</a>
-<p><strong>from</strong> is for arrays. it used to be fromArray</p>
+<p><strong>from</strong> is for arrays and promises. it used to be fromArray</p>
 <p><strong>of</strong> is for non-arrays</p>
 
 
 <h3 id="el1"></h3>
 
-<script src="/lib/Rx5.umd.js"></script>
+<script src="/lib/Rx5.js"></script>
 <script>
   const {Observable} = Rx;
   const el1 = document.getElementById('el1');
@@ -21,6 +21,12 @@
     .subscribe(value => el1.innerText = value);
 
 
+  Rx.Observable.from(
+    fetch('https://jsonplaceholder.typicode.com/users/1')
+      .then(res => res.json())
+  )
+    .do(x => log(x, 'lime'))
+    .subscribe();
 
 
 </script>

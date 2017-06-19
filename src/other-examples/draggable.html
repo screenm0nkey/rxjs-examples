@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h1>Draggable</h1> Dragging will be cancelled in 3 seconds. <span id="time"></span>
+<div id="draggable" style="width: 50px;
+              position: absolute;
+              left: 10px;
+              top:57px;
+              height:50px;
+              background-color: darkcyan;
+              cursor: hand"></div>
+
+
+<script src="/lib/jquery.js"></script>
+<script src="/lib/Rx4.js"></script>
+
+<script>
+  const $element = $('#draggable');
+  const $time = $('#time');
+  const $document = $(document);
+
+  //ORANGE
+  const onDrag = ({x: left, y: top}) => {
+    $element.css({left, top});
+    log({left, top}, 'orange');
+  };
+
+  //RED
+  const onDragBegin = () => {
+    timer$.subscribe();
+    log('onDragBegin', 'red');
+  };
+
+  //GREEN
+  const onDragComplete = () => {
+    log('onDragComplete', 'green');
+  };
+
+  // this will stop the drag when it emits
+  const notifier = new Rx.Subject();
+
+  const timer$ = Rx.Observable
+    .interval(1000)
+    .map((val) => val + 1)
+    .take(3)
+    .do((val) => {
+      $time[0].innerText = val;
+      val === 3 && notifier.onNext({x: 10, y: 10});
+    });
+
+
+  const stopDrag$ = Rx.Observable.merge(
+    Rx.Observable.fromEvent($document, 'mouseup'),
+    notifier.asObservable().filter(val => !!val));
+
+  const mouseup$ = Rx.Observable.using(
+    () => ({dispose: onDragComplete}),
+    () => stopDrag$);
+
+  //unsubscribe if there is a 'mouseup' event or if there is a position notification from the container
+  const mousemove$ = Rx.Observable
+    .fromEvent($document, 'mousemove')
+    .takeUntil(mouseup$);
+
+  //Subscribe to the 'mousedown' event
+  Rx.Observable.fromEvent($element, 'mousedown')
+  // throttle as dont want multiple clicks within short timeframe to interrupt
+    .throttle(25)
+    //Notify parent that a drag has started
+    .do(onDragBegin)
+    //Switch subscription to the 'mousemove' event
+    .flatMapLatest(() => mousemove$)
+    //Throttle by 15ms
+    .throttle(15)
+    //Get the current x and y position
+    .map(({pageX, pageY}) => ({x: pageX, y: pageY}))
+    //Notify the parent
+    .subscribe(onDrag);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="/lib/Rx5.js"></script>
+</head>
+<body>
+<a href="https://egghead.io/lessons/rxjs-implement-pause-and-resume-feature-correctly-through-rxjs">Link</a>
+<h1>IMplementing pause with rx is not really possible....</h1>
+
+<script>
+  const resume$ = new Rx.Subject();
+
+  const res$ = resume$
+    .switchMap(resume =>
+      resume ?
+        Rx.Observable.interval(2000) :
+        Rx.Observable.empty()
+    )
+    .do(x => log(x, 'red'))
+    .switchMap(x => Rx.Observable.ajax({
+      url: 'https://jsonplaceholder.typicode.com/users/'+(++x),
+      method: 'GET',
+    }));
+
+  res$.subscribe(function (data) {
+    console.log(data.response);
+  });
+
+  resume$.next(false);
+  setTimeout(() => resume$.next(true), 500);
+  setTimeout(() => resume$.next(false), 5000);
+  setTimeout(() => resume$.next(true), 6000);
+  setTimeout(() => resume$.next(false), 9000);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h3>flatMapLatest() now called switchMap() in rxjs5</h3>
+
+<a href="http://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html"
+   target="_blank">taking-advantage-of-observables-in-angular2</a>
+
+<h4>When you hear the word merge, think — use every­thing on all the streams aka. merge every­thing.
+  Whereas when you hear the word switch, think — switch to using data on the newer stream</h4>
+
+<pre>
+    The switchMap operator is comparable to mergeMap in a way. Both operators automatically
+    subscribe to the Observable that the function produces and flatten the result for us.
+    The difference is that the switchMap operator automatically unsubscribes from previous
+    subscriptions as soon as the outer Observable emits new values.
+</pre>
+<script src="/lib/Rx5.js"></script>
+<script>
+  // switchMap() is the same as flatMapLatest in Rx4
+  const switchMap = Rx.Observable
+    .range(3, 3)
+    .switchMap(x => Rx.Observable.from([x + 'a', x + 'b', x + 'c']));
+
+  // mergeMap() is the same as flatMap in Rx4
+  const mergeMap = Rx.Observable
+    .range(3, 3)
+    .mergeMap((x)=> Rx.Observable.from([x + 'a', x + 'b', x + 'c']));
+
+
+  switchMap.subscribe(x=> log(x, 'green'));
+  mergeMap.subscribe(x=> log(x, 'red'));
+
+
+
+
+</script>
+
+</body>
+</html>

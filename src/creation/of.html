@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>Observer</h3>
+
+<pre>
+    The Observer object provides support for push-style iteration over an observable sequence.
+
+    The Observer and Objects interfaces provide a generalized mechanism
+    for push-based notification, also known as the observer design pattern.
+    The Observable object represents the object that sends notifications (the provider);
+    the Observer object represents the class that receives them (the observer).
+</pre>
+
+<script src="/lib/Rx4.js"></script>
+
+<script>
+  // the observable calls the "next()" method of the observer
+  let observable$ = Rx.Observable.of(42).map(x => ({val: x, col: 'green'}))
+
+  let observer = Rx.Observer.create(
+    (x) => log(x.val, x.col),
+    (err) => log(err, 'red'),
+    () => log('complete'));
+
+  observer.next({val: 'CAT', col: 'red'});
+  observable$.subscribe(observer);
+
+
+</script>
+
+</body>
+</html>

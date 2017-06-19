@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<h1>Draggable</h1>
+<div style="width: 50px;
+              position: absolute;
+              left: 20px;
+              top:57px;
+              height:50px;
+              background-color: gray;
+              cursor: no-drop"></div>
+
+<div id="draggable" style="width: 50px;
+              z-index: 2;
+              position: absolute;
+              left: 20px;
+              top:57px;
+              height:50px;
+              background-color: darkcyan;
+              cursor: no-drop"></div>
+
+
+<script src="/lib/jquery.js"></script>
+<script src="/lib/Rx4.js"></script>
+<script>
+  console.clear();
+
+  const draggableService = Object.freeze({
+    getClosestPosition(target, positions) {
+      let hash = Object.create(null);
+      positions.forEach((element, position) => {
+        hash[this.getDistanceBetween(target, position)] = position;
+      });
+
+      return hash[Math.min(...Object.keys(hash).map(distance => +distance))];
+    },
+
+    getCenterPosition({x, y}, {height, width}) {
+      return ({x: x + width / 2, y: y + height / 2});
+    },
+
+    getOffsetPosition({x, y}, {height, width}) {
+      return ({x: x - width / 2, y: y - height / 2});
+    },
+
+    getDistanceBetween(pointA, pointB) {
+      return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2));
+    },
+
+    getCoordinates({pageX: x, pageY: y}){
+      return {x, y}
+    }
+  });
+
+  const $element = $('#draggable');
+  const $document = $(document);
+  const {left: initX, top: initY} = $element.css(['left', 'top']);
+  const [elHeight, elWidth] = [$element.height(), $element.width()];
+
+  $element.attr('draggable', 'false');
+
+  const mousemove$ = Rx.Observable.fromEvent($document, 'mousemove');
+  const mousedown$ = Rx.Observable.fromEvent($document, 'mousedown');
+  const mouseup$ = Rx.Observable.fromEvent($document, 'mouseup');
+
+  /*
+   Initiates the mousedown action as soon as the mouse moves 10px from it's original location.
+   The coordinates from here used to calculate the distance the mouse has moved.
+   The stream completes as soon as one set of coordinates have been emitted.
+   The merge(rx.timer) initiates the mousedown action if the user clicks but doesn't move the mouse.
+   TakeUntil is needed in case there is a mousedown and mouseup without moving the mouse.
+   */
+  const initiateMousedown = (mousedownCoords) =>
+    mousemove$
+      .map(draggableService.getCoordinates)
+      .filter(mousemoveCoords => draggableService.getDistanceBetween(mousemoveCoords, mousedownCoords) > 10)
+      .throttle(25)
+      .merge(Rx.Observable.timer(500).map(() => mousedownCoords))
+      .takeUntil(mouseup$)
+      .do(x => log(x, 'red'))
+      .take(1);
+
+  /*
+   Emits the coordinates of the mouse whilst it's in a mousedown state.
+   Completes on mouseup action.
+   */
+  const onMousemove = () =>
+    mousemove$
+      .takeUntil(mouseup$)
+      .do(coords => log(draggableService.getCoordinates(coords), 'violet'))
+      .finally(onDragEnd);
+
+
+  mousedown$
+    .map(draggableService.getCoordinates)
+    .flatMapLatest(initiateMousedown)
+    .do(onDragStart)
+    .flatMapLatest(onMousemove)
+    .map(draggableService.getCoordinates)
+    .throttle(40)
+    .do(coords => log(coords, 'orange'))
+    .do(onDrag)
+    .subscribe();
+
+  function onDragStart({x, y}) {
+    log('DRAG START', 'lime');
+    $element.addClass('drag-active');
+    onDrag({x, y});
+  }
+
+  function onDrag({x, y}) {
+    let {x: left, y: top} = draggableService.getOffsetPosition({x, y}, {height: elHeight, width: elWidth});
+    $element.css({left, top});
+  }
+
+  function onDragEnd() {
+    log('DRAG END', 'lime');
+    $element.removeClass('drag-active').css({left: initX || 0, top: initY || 0});
+  }
+
+</script>
+
+</body>
+</html>

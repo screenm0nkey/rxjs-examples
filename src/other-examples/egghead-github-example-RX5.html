@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    .header, li {
+      padding: 5px
+    }
+
+    body {
+      font-family: sans-serif;
+      padding: 10px
+    }
+
+    h3 {
+      font-weight: 700;
+      display: inline-block;
+      padding: 0;
+      margin: 0
+    }
+
+    .refresh {
+      font-size: 80%;
+      margin-left: 10px
+    }
+
+    .header {
+      background: #ECECEC
+    }
+
+    .suggestions {
+      border: 2px solid #ECECEC
+    }
+
+    li img {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px
+    }
+
+    li .close, li .username {
+      display: inline-block;
+      position: relative;
+      bottom: 15px;
+      left: 5px
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h3>Who to follow</h3><a href="#" class="refresh">Refresh</a>
+  </div>
+  <ul class="suggestions">
+    <li class="suggestion1">
+      <img/>
+      <a href="#" target="_blank" class="username">this will not be displayed</a>
+      <a href="#" class="close close1">x</a>
+    </li>
+    <li class="suggestion2">
+      <img/>
+      <a href="#" target="_blank" class="username">neither this</a>
+      <a href="#" class="close close2">x</a>
+    </li>
+    <li class="suggestion3">
+      <img/>
+      <a href="#" target="_blank" class="username">nor this</a>
+      <a href="#" class="close close3">x</a>
+    </li>
+  </ul>
+</div>
+
+<script src="/lib/jquery.js"></script>
+<script src="/lib/Rx5.js"></script>
+<script>
+  const GITHUB_URI = 'https://api.github.com/users';
+  const refreshButton = document.querySelector('.refresh');
+  const closeButton1 = document.querySelector('.close1');
+  const closeButton2 = document.querySelector('.close2');
+  const closeButton3 = document.querySelector('.close3');
+
+  const Observable = Rx.Observable;
+  const remove1Click$ = Observable.fromEvent(closeButton1, 'click');
+  const remove2Click$ = Observable.fromEvent(closeButton2, 'click');
+  const remove3Click$ = Observable.fromEvent(closeButton3, 'click');
+
+  // stream returns uri
+  const githubURI$ = Observable.of(GITHUB_URI);
+  const refreshClick$ = Observable.fromEvent(refreshButton, 'click');
+
+  // stream returns github uri with random 'since' property
+  const githubSinceURI$ = refreshClick$.map(() => GITHUB_URI + '?since=' + Math.floor(Math.random() * 500));
+
+  // merge both streams which return github URI
+  const githubRequest$ = githubURI$.merge(githubSinceURI$);
+
+  // shareReplay() stops a new connection happening on every "subscribe" by converting
+  // the stream into a hot observable and sharing the data
+  const gitHubUsers$ = githubRequest$
+    .flatMap(url => Observable.fromPromise(jQuery.getJSON(url)))
+    .do(users => console.log('users', users))
+    .publishReplay(1)
+    .refCount();
+
+
+  function getRandomUser(githubUsers) {
+    return githubUsers[Math.floor(Math.random() * githubUsers.length)];
+  }
+
+  function createSuggestionStream(gitHubUsers$, removeClick$) {
+    return gitHubUsers$
+      .map(getRandomUser)
+      .startWith(null)
+      .merge(refreshClick$.map(_ => null)) //merge combines two Observables into one
+      // withLatestFrom() is similar to combineLatest(). It will take args from both streams
+      // and you can return a single value from the callback
+      .do(x => log(x, 'red'))
+      .merge(removeClick$.withLatestFrom(gitHubUsers$,
+        (clickEvt, githubUsers) => getRandomUser(githubUsers)));
+  }
+
+  const suggestion1Stream = createSuggestionStream(gitHubUsers$, remove1Click$);
+  const suggestion2Stream = createSuggestionStream(gitHubUsers$, remove2Click$);
+  const suggestion3Stream = createSuggestionStream(gitHubUsers$, remove3Click$);
+
+  suggestion1Stream.subscribe(user => renderSuggestion(user, '.suggestion1'));
+
+  suggestion2Stream.subscribe(user => renderSuggestion(user, '.suggestion2'));
+
+  suggestion3Stream.subscribe(user => renderSuggestion(user, '.suggestion3'));
+
+
+  // Rendering ---------------------------------------------------
+  function renderSuggestion(suggestedUser, selector) {
+    const suggestionEl = document.querySelector(selector);
+    if (suggestedUser === null) {
+      suggestionEl.style.visibility = 'hidden';
+    } else {
+      suggestionEl.style.visibility = 'visible';
+      const usernameEl = suggestionEl.querySelector('.username');
+      usernameEl.href = suggestedUser.html_url;
+      usernameEl.textContent = suggestedUser.login;
+      const imgEl = suggestionEl.querySelector('img');
+      imgEl.src = "";
+      imgEl.src = suggestedUser.avatar_url;
+    }
+  }
+</script>
+</body>
+</html>

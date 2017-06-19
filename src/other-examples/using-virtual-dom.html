@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<ul>
+<li>create special view</li>
+<li>create rootNode from view</li>
+<li>insert rootNode into DOM</li>
+
+<li>create newView</li>
+<li>create patches but comparing old view to new view</li>
+<li>update RootNode by patching old rootNode with patches</li>
+<li>store rootNode and view</li>
+</ul>
+
+<div id="box" style=""></div>
+<pre id="pre"></pre>
+
+<script src="/lib/Rx4.js"></script>
+<script src="/lib/jquery.js"></script>
+<script src="/node_modules/virtual-dom/dist/virtual-dom.js"></script>
+
+<script>
+  let vd = window.virtualDom;
+  // h = html element
+  let render = count => vd.h('h2', {className: 'hello'}, ['helloworld ' + count]);
+  let view = render(0);
+  let rootNode = vd.create(view);
+  document.body.appendChild(rootNode);
+
+  Rx.Observable
+    .interval(1000)
+    .map(n => render(n + 1))
+    .subscribe(newView => {
+      const patches = vd.diff(view, newView);
+      rootNode = vd.patch(rootNode, patches);
+      view = newView;
+    });
+
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

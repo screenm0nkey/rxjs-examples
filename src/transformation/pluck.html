@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+<p>typing "hello world"</p>
+<input type="text">
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  const input$ = Rx.Observable.fromEvent(document.querySelector('input'), 'input');
+  const lastChar$ = input$.pluck('target', 'value').map((val)=>val.split('').pop());
+
+  // Pass on a new value
+  input$
+    .map(event => event.target.value)
+    .subscribe(value => log(value, 'red')); // "h"
+
+  // Pass the two previous values
+  lastChar$
+    .pairwise()
+    .subscribe(value => log(value, 'orange')); // ["h", "e"]
+
+  // Only pass unique values through
+  lastChar$
+    .distinct()
+    .subscribe(value => log(value, 'pink')); // "helo wrd"
+
+  // Do not pass repeating values through
+  lastChar$
+    .distinctUntilChanged()
+    .subscribe(value => log(value, 'lime')); // "helo world"
+
+  input$.subscribe(_=>console.log('\n\n'))
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  //emit four strings
+  const example = Rx.Observable.of('WAIT','ONE','SECOND','Last will display');
+  /*
+   Only emit values after a second has passed between the last emission,
+   throw away all other values
+   */
+  const debouncedExample = example.debounce(() => Rx.Observable.timer(100));
+  /*
+   In this example, all values but the last will be omitted
+   output: 'Last will display'
+   */
+  const subscribe = debouncedExample.subscribe(val => log(val, 'green'));
+
+
+</script>
+
+</body>
+</html>
