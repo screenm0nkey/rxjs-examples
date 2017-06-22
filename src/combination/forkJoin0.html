@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h3>forkJoin</h3>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+<script src="/lib/Rx5.js"></script>
+
+<script>
+  class StarWars {
+    constructor() {
+      this.API = 'https://starwars-json-server-aikiidixsl.now.sh';
+      this.peopleClick$ = new Rx.Subject();
+      this.getPeople();
+
+      this.vehicles$ = this.peopleClick$
+        .do(x=>log(x, 'blue'))
+        .switchMap(this.getVehiclesFromPerson.bind(this))
+        .share();
+
+      this.vehicles$.subscribe(person=>log(person, 'green'));
+    }
+
+    getPeople() {
+      this.people$ = Rx.Observable
+        .from(fetch(`${this.API}/people`).then(res=>res.json()))
+        .mergeMap(arr=>Rx.Observable.from(arr))
+        .filter(person=>person.vehicles.length)
+        .map(({name, id, vehicles})=>({name, id, vehicles}));
+
+      this.people$.subscribe(person=>{
+        log(person, 'pink');
+        this.peopleClick$.next(person);
+      })
+    }
+
+    // forkJoin runs all observable sequences in parallel and collect their last elements.
+    // forkJoin is similar to $q.all(). The person.vehicles.map below returns multiple requests
+    getVehiclesFromPerson(person) {
+      log(person, 'orange');
+      return Rx.Observable.forkJoin(person.vehicles.map(id => this.getVechicles(id)))
+    }
+
+    getVechicles(id) {
+      return Rx.Observable
+        .from(fetch(`${this.API}/vehicles/${id}`).then(res => res.json()))
+        .map(v => Object.assign({}, v, {image_path: `${this.API}/${v.image}`}))
+        .do(x=>log(x, 'lime'))
+
+    }
+  }
+
+  new StarWars()
+
+</script>
+
+</body>
+</html>
+
+

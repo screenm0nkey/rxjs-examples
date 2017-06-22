@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>concatMap</title></head>
+<body>
+<h3>concatMap</h3>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+//Example 4: Illustrating difference between concatMap and mergeMap
+const stream$ = Rx.Observable.of(4000, 3000, 2000, 1000);
+
+stream$
+    .concatMap(v => Rx.Observable.of(v).delay(v))
+    .subscribe(v => log('concatMap:' + v, 'orange'))
+
+
+stream$
+    .mergeMap(v => Rx.Observable.of(v).delay(v))
+    .subscribe(v => log('mergeMap:' + v, 'lime'))
+
+</script>
+
+</body>
+</html>
+
+

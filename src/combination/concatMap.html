@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>concatMap</title></head>
+<body>
+<h3>concatMap</h3>
+<a href="http://www.syntaxsuccess.com/viewarticle/combining-multiple-rxjs-streams-in-angular-2.0" target="_blank">
+  Combining Multiple RxJs Streams In Angular
+</a>
+
+<script src="/lib/Rx5.js"></script>
+<script>
+  const source = Rx.Observable.of('Hello', 'Goodbye');
+  // map value from source into inner observable, when complete emit result and move to next
+  const example1 = source.concatMap(val => Rx.Observable.of(`${val} World!`));
+  //output: 'Example One: 'Hello World', Example One: 'Goodbye World'
+  example1.subscribe(val => log(val, 'red'));
+
+
+
+  //example with promise
+  const examplePromise = val => new Promise(resolve => resolve(`${val} World!`));
+  // map value from source into inner observable, when complete emit result and move to next
+  const example = source.concatMap(val => examplePromise(val))
+  //output: 'Example w/ Promise: 'Hello World', Example w/ Promise: 'Goodbye World'
+  example.subscribe(val => log(val, 'green'));
+
+
+//Example 4: Illustrating difference between concatMap and mergeMap
+  Rx.Observable.of(2000, 1000)
+    .concatMap(v => Rx.Observable.of(v).delay(v))
+    // concatMap: 2000, concatMap: 1000
+    .subscribe(v => log('concatMap:' + v, 'orange'))
+
+
+  Rx.Observable.of(2000, 1000)
+    .mergeMap(v => Rx.Observable.of(v).delay(v))
+    // mergeMap: 1000, mergeMap: 2000
+    .subscribe(v => log('mergeMap:' + v, 'lime'))
+
+</script>
+
+</body>
+</html>
+
+
